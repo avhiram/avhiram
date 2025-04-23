@@ -16,10 +16,12 @@ Jekyll site. The following is a list of targets:
 
 ```shell
 .
-├── _config.yml
-├── _plugins
-├── _tabs
-└── index.html
+├── _posts         # Articles de blog (notes, write-ups, etc.)
+├── _config.yml    # Configuration du site
+├── _tabs          # Onglets personnalisés (About, Tags, etc.)
+├── images/        # Dossier pour les illustrations
+├── index.html     # Page d’accueil
+
 ```
 
 To save you time, and also in case you lose some files while copying, we extract those files/configurations of the
