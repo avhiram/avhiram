@@ -1,3 +1,11 @@
+title: "Guide Complet pour la Certification OSCP+"
+date: 2025-04-22 00:00:00 +8000
+categories: [Certifications, Offensive Security, Cheatsheet]
+tags: []
+description: A concise OSCP cheatsheet offering essential tools, techniques, and commands for efficient penetration testing, privilege escalation, and exploitation.
+image:
+  path: images/oscp-logo.png
+  alt: OSCP 
 # Guide Complet pour la Certification OSCP+
 
 # 🏆 Préparation à l'OSCP
@@ -164,9 +172,6 @@ L'examen est une évaluation pratique qui teste la capacité de l'étudiant à o
 
 Les étudiants doivent soumettre un rapport dans les 24 heures suivant l'évaluation pratique, détaillant toutes les techniques d'exploitation utilisées pendant l'examen. Un rapport incomplet entraînera 0 point pour les machines associées.
 
-## Mon chemin vers l'OSCP+
-- eJPT puis OSCP+ **OU**
-- eJPT puis (CEH(P), eCPPTv2, PNPT, eWPTX) et enfin OSCP+
 
 ## Plateformes
 1. Pour l'accès initial, travailler sur eJPT, cet article et le contenu officiel
