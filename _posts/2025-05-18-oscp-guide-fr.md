@@ -1,8 +1,8 @@
 ---
-title: "CPTS Cheat Sheet"
+title: "Guide Complet pour la Certification OSCP+"
 date: 2025-05-18 10:00:00 +0200
-categories: [Cheatsheet, CPTS]
-tags: [cpts, cheatsheet]
+categories: [Cheatsheet, OSCP+]
+tags: [OSCP+, cheatsheet]
 toc: true
 image: /assets/images/OSCP-Exam-Guide.png
 ---
