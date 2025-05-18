@@ -5,7 +5,7 @@ categories: [Cheatsheet, OSCP+]
 tags: [OSCP+, cheatsheet]
 toc: true
 image:
-  path: images/OSCP-Exam-Guide.png
+  path: images/oscpguide.jpg
    alt: OSCP+
 ---
 # Guide Complet pour la Certification OSCP+
