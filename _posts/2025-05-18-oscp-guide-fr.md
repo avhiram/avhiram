@@ -1,11 +1,11 @@
-title: "Guide Complet pour la Certification OSCP+"
-date: 2025-04-22 00:00:00 +8000
-categories: [Certifications, Offensive Security, Cheatsheet]
-tags: []
-description: A concise OSCP cheatsheet offering essential tools, techniques, and commands for efficient penetration testing, privilege escalation, and exploitation.
-image:
-  path: images/oscp-logo.png
-  alt: OSCP 
+---
+title: "CPTS Cheat Sheet"
+date: 2025-05-18 10:00:00 +0200
+categories: [Cheatsheet, CPTS]
+tags: [cpts, cheatsheet]
+toc: true
+image: /assets/images/OSCP-Exam-Guide.png
+---
 # Guide Complet pour la Certification OSCP+
 
 # 🏆 Préparation à l'OSCP
